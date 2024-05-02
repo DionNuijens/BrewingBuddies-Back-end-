@@ -5,9 +5,13 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies", "BrewingBuddies\BrewingBuddies.csproj", "{0036947A-5BD5-473B-8CD9-5C061822DF93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewingBuddies_RiotClient", "BrewingBuddies_RiotClient\BrewingBuddies_RiotClient.csproj", "{CCF2FA62-78BE-4C84-8101-B6D1096733B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies_RiotClient", "BrewingBuddies_RiotClient\BrewingBuddies_RiotClient.csproj", "{CCF2FA62-78BE-4C84-8101-B6D1096733B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewingBuddies-Entitys", "BrewingBuddies-Entitys\BrewingBuddies-Entitys.csproj", "{05733B0B-E1EB-424C-8DD2-931D53D55B59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies-Entitys", "BrewingBuddies-Entitys\BrewingBuddies-Entitys.csproj", "{05733B0B-E1EB-424C-8DD2-931D53D55B59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies_DataService", "BrewingBuddies_DataService\BrewingBuddies_DataService.csproj", "{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{05733B0B-E1EB-424C-8DD2-931D53D55B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05733B0B-E1EB-424C-8DD2-931D53D55B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05733B0B-E1EB-424C-8DD2-931D53D55B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
