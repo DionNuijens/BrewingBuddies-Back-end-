@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_Entitys
 {
-    public class AccountDTO
+    public class AccountDTO : BaseEntity
     {
         public string? puuid { get; set; }
         public string? gameName { get; set; }
