@@ -27,6 +27,6 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release
     - name: Install Dependencies
-      run: npm install
+      run: npm ci
     - name: Unit Test
       run: npm test
