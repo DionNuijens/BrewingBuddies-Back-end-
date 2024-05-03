@@ -24,38 +24,39 @@ namespace UnitTests
 
 
 
-        [Fact]
-        public async Task GetAll_WhenCalled_ReturnsUsers()
-        {
-            // Arrange
-            Guid user1Id = Guid.NewGuid();
-            Guid user2Id = Guid.NewGuid();
-            Guid user3Id = Guid.NewGuid();
-            var users = new List<UserDTO>
-            {
-                new UserDTO { Id = user1Id, UserName = "User1" ,Status = 1, AddedDate = DateTime.Now.AddDays(-3) },
-            };
-            var data = users.AsQueryable();
-            var mockdbContext = new Mock<AppDbContext>();
-            var mockSet = new Mock<DbSet<UserDTO>>();
-            mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<UserDTO>>().Setup(x => x.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<UserDTO>>().Setup(x => x.GetEnumerator()).Returns(() => data.GetEnumerator());
-            mockdbContext.Setup(x => x.Users).Returns(mockSet.Object);
+        //[Fact]
+        //public async Task AddUser_WhenCalled_ReturnsUsers()
+        //{
+        //    // Arrange
+        //    Guid user1Id = Guid.NewGuid();
+        //    Guid user2Id = Guid.NewGuid();
+        //    Guid user3Id = Guid.NewGuid();
+        //    var users = new List<UserDTO>
+        //    {
+        //        new UserDTO { Id = user1Id, UserName = "User1" ,Status = 1, AddedDate = DateTime.Now.AddDays(-3) },
+        //    };
+        //    var data = users.AsQueryable();
+        //    var mockdbContext = new Mock<AppDbContext>();
+        //    var mockSet = new Mock<DbSet<UserDTO>>();
+        //    var mockLogger = new Mock<ILogger>();
+        //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Provider).Returns(data.Provider);
+        //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.ElementType).Returns(data.ElementType);
+        //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Expression).Returns(data.Expression);
+        //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.GetEnumerator()).Returns(() => data.GetEnumerator());
+        //    mockdbContext.Setup(x => x.Users).Returns(mockSet.Object);
 
-            mockdbContext.Setup(x => x.SaveChanges()).Returns(1);
+        //    mockdbContext.Setup(x => x.SaveChanges()).Returns(1);
 
-            var mockLogger = new Mock<ILogger>();
-            IUserRepository repository = new UserRepository(mockdbContext.Object, mockLogger.Object);
+        //    IUserRepository repository = new UserRepository(mockdbContext.Object, mockLogger.Object);
 
-            // Act
-            //var response = await repository.Create(users.FirstOrDefault());
+        //    // Act
+        //    //var response = await repository.Create(users.FirstOrDefault());
+        //    var result = await repository.Create(users.FirstOrDefault());
 
-            // Assert
-            ////Assert.True(response);
-            Assert.Equal(1, 1);
-        }
+        //    // Assert
+        //    Assert.NotNull(result);
+        //    Assert.Equal(1, 1);
+        //}
 
 
 
