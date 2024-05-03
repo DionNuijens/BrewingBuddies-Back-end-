@@ -26,5 +26,5 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --configuration Release
-    - name: Unit Test
-      run: npm test
+    - name: Tests
+      run: dotnet test --verbosity normal --filter "FullyQualifiedName~UnitTests.*"
