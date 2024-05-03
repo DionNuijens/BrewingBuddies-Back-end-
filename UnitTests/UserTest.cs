@@ -23,6 +23,16 @@ namespace UnitTests
         //private readonly ILogger _logger;
 
 
+        [Fact]
+        public void Test()
+        {
+            int a = 1;
+            int b = 2;
+            int c = a + b;
+
+
+            Assert.Equal((a+b), c);
+        }
 
         //[Fact]
         //public async Task AddUser_WhenCalled_ReturnsUsers()
@@ -60,16 +70,6 @@ namespace UnitTests
 
 
 
-        [Fact]
-        public void Test()
-        {
-            int a = 1;
-            int b = 2;
-            int c = a + b;
-
-
-            Assert.Equal((a+b), c);
-        }
 
     }
 }
