@@ -22,6 +22,13 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Inspect code
+      uses: muno92/resharper_inspectcode@v1
+      with:
+        solutionPath: ./BrewingBuddies.sln
+        minimumSeverity: error
+      
     - name: Build
       run: dotnet build --no-restore
     - name: Test
