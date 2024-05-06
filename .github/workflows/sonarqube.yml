@@ -1,23 +1,40 @@
+name: SonarQube Analysis
+
 on:
   push:
     branches:
-      - '*'
+      - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches:
+      - main
 
-name: SonarQube Scan
 jobs:
-  sonarqube:
-    name: SonarQube Trigger
+  build:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checking out
-      uses: actions/checkout@master
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reportingg
-        fetch-depth: 0
-    - name: SonarQube Scan
-      uses: kitabisa/sonarqube-action@v1.2.0
-      with:
-        host: ${{ secrets.SONAR_HOST_URL }}
-        login: ${{ secrets.SONAR_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+  sonarqube:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Setup SonarQube Scanner
+        uses: SonarSource/sonarqube-scan-action@v1
+        with:
+          sonar-login: ${{ secrets.SONAR_TOKEN }}
+          sonar-project-key: BrewingBuddies
+          sonar-host-url: http://localhost:9000
