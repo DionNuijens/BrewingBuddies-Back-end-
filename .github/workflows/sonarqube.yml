@@ -15,8 +15,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.0.x
-      - name: Install dependencies
-        run: npm install
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
