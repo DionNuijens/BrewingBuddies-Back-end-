@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  sonarqube:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,15 +24,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release
-
-  sonarqube:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Setup SonarQube Scanner
+      - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v1
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
