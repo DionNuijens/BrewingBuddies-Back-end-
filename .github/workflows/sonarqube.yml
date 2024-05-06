@@ -35,6 +35,6 @@ jobs:
       - name: Setup SonarQube Scanner
         uses: SonarSource/sonarqube-scan-action@v1
         with:
-          sonar-login: ${{ secrets.SONAR_TOKEN }}
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
           sonar-project-key: BrewingBuddies
-          sonar-host-url: http://localhost:9000
