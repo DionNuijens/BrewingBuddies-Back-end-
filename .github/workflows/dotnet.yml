@@ -37,7 +37,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: dionn/BrewingBuddies:latest
+        tags: dionn/brewingBuddies:latest
         
   deploy_locally:
     name: Deploy Locally
@@ -45,10 +45,11 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Pull Docker image
-      run: docker pull dionn/BrewingBuddies:latest
+      run: docker pull dionn/brewingBuddies:latest
       
     - name: Run Docker container
-      run: -p 5000:5000 -p 5001:5001 -e ASPNETCORE_HTTP_PORT=https://+:5001/ -e ASPNETCORE_URLS=http://+:5000/ --name BrewingBuddies --restart=always BrewingBuddies 
+      run: -p 5000:5000 -p 5001:5001 -e ASPNETCORE_HTTP_PORT=https://+:5001/ -e ASPNETCORE_URLS=http://+:5000/ --name BrewingBuddies --restart=always BrewingBuddies
+      
     - name: Inspect code
       uses: muno92/resharper_inspectcode@v1
       with:
