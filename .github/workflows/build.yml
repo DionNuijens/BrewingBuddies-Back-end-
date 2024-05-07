@@ -43,6 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="BrewingBuddies"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="BrewingBuddies" /d:sonar.exclusions="**/bin/**/*,**/obj/**/*"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
