@@ -55,7 +55,7 @@ jobs:
   deploy_locally:
     name: Deploy Locally
     needs: build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Pull Docker image
       run: docker pull dionn/brewingbuddies:latest
