@@ -25,7 +25,7 @@ jobs:
       
     - name: Docker operations
       run: |
-        CD BrewingBuddies-Back-end-  # Change to the correct directory
+        cd BrewingBuddies-Back-end-  # Change to the correct directory
         git checkout main
         git pull
         docker stop BrewingBuddies-Back-end- || true  # Stop container if running, ignoring errors if it's not running
