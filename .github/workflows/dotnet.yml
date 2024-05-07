@@ -22,18 +22,33 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-      
-    - name: Docker operations
-      run: |
-        cd BrewingBuddies-Back-end-  # Change to the correct directory
-        git checkout main
-        git pull
-        docker stop BrewingBuddies-Back-end- || true  # Stop container if running, ignoring errors if it's not running
-        docker rm BrewingBuddies-Back-end- || true    # Remove container, ignoring errors if it doesn't exist
-        docker rmi --force BrewingBuddies-Back-end- || true  # Remove image, ignoring errors if it doesn't exist
-        docker build --rm -t BrewingBuddies-Back-end- .  # Build Docker image
-        docker run -p 5000:5000 -p 5001:5001 -e ASPNETCORE_HTTPS_PORT=5001 -e ASPNETCORE_URLS=https://+:5001 --name BrewingBuddies-Back-end- --restart=always BrewingBuddies-Back-end-  # Run Docker container
 
+    - name: Buildx docker
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: DockerHub login
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and push Dockerhub
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: dionn/BrewingBuddies:latest
+        
+  deploy_locally:
+    name: Deploy Locally
+    needs: build
+    runs-on: self-hosted
+    steps:
+    - name: Pull Docker image
+      run: docker pull dionn/BrewingBuddies:latest
+      
+    - name: Run Docker container
+      run: -p 5000:5000 -p 5001:5001 -e ASPNETCORE_HTTP_PORT=https://+:5001/ -e ASPNETCORE_URLS=http://+:5000/ --name BrewingBuddies --restart=always BrewingBuddies 
     - name: Inspect code
       uses: muno92/resharper_inspectcode@v1
       with:
