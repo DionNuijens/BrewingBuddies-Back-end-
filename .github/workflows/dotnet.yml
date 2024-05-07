@@ -36,18 +36,16 @@ jobs:
     - name: Restore NuGet packages
       run: dotnet restore
 
-    - name: CD to BrewingBuddiesDirectory
-      run: cd ~/BrewingBuddies-Back-end-
-    - name: Change branch
-      run: git checkout main
-    - name: Pull changes
-      run: git pull
-    - name: Stop current docker container
-      run: docker stop BrewingBuddies-Back-end-
-    - name: Delete current docker container
-      run: docker rm BrewingBuddies-Back-end-
-    - name: Remove current web api Image
-      run: docker rmi --force BrewingBuddies-Back-end-
+    - name: Docker operations
+      run: |
+        cd BrewingBuddies-Back-end-  # Change to the correct directory
+        git checkout main
+        git pull
+        docker stop BrewingBuddies-Back-end- || true  # Stop container if running, ignoring errors if it's not running
+        docker rm BrewingBuddies-Back-end- || true    # Remove container, ignoring errors if it doesn't exist
+        docker rmi --force BrewingBuddies-Back-end- || true  # Remove image, ignoring errors if it doesn't exist
+        docker build --rm -t BrewingBuddies-Back-end- .  # Build Docker image
+        docker run -p 5000:5000 -p 5001:5001 -e ASPNETCORE_HTTPS_PORT=5001 -e ASPNETCORE_URLS=https://+:5001 --name BrewingBuddies-Back-end- --restart=always BrewingBuddies-Back-end-  # Run Docker container
     - name: Build the Docker image
       run: docker build --rm -t BrewingBuddies-Back-end- .
     - name: Run Docker container
