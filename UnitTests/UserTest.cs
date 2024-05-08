@@ -21,7 +21,7 @@ namespace UnitTests
         //private readonly Mock<IUserContext> _context;
         //private readonly UserRepository _repository;
         //private readonly ILogger _logger;
-        public readonly ILogger _logger;
+        //public readonly ILogger _logger;
 
 
 
