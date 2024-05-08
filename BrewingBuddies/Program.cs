@@ -25,11 +25,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         options.AddPolicy("AllowSpecificOrigins",
             builder =>
             {
-                builder.WithOrigins("http://localhost:5173")
+                //builder.WithOrigins("http://localhost:5173")
+                builder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             });
-    });
+    }); 
 
     var app = builder.Build();
 

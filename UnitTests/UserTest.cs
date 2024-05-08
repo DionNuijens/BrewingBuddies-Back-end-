@@ -18,9 +18,11 @@ namespace UnitTests
 {
     public class UserTest
     {
-        //private readonly Mock<IUserContext> _context;
-        //private readonly UserRepository _repository;
+        private readonly Mock<IUserContext> _context;
+        private readonly UserRepository _repository;
         //private readonly ILogger _logger;
+        public readonly ILogger _logger;
+
 
 
         [Fact]
@@ -48,7 +50,8 @@ namespace UnitTests
         //    var data = users.AsQueryable();
         //    var mockdbContext = new Mock<AppDbContext>();
         //    var mockSet = new Mock<DbSet<UserDTO>>();
-        //    var mockLogger = new Mock<ILogger>();
+        //    //var mockLogger = new Mock<ILogger>();
+        //    var mockLogger = _logger;
         //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Provider).Returns(data.Provider);
         //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.ElementType).Returns(data.ElementType);
         //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Expression).Returns(data.Expression);
@@ -57,7 +60,7 @@ namespace UnitTests
 
         //    mockdbContext.Setup(x => x.SaveChanges()).Returns(1);
 
-        //    IUserRepository repository = new UserRepository(mockdbContext.Object, mockLogger.Object);
+        //    IUserRepository repository = new UserRepository(mockdbContext.Object, mockLogger);
 
         //    // Act
         //    //var response = await repository.Create(users.FirstOrDefault());
@@ -66,7 +69,7 @@ namespace UnitTests
         //    // Assert
         //    Assert.NotNull(result);
         //    Assert.Equal(1, 1);
-        //}
+        }
 
 
 
