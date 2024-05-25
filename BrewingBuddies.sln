@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies-Entitys", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrewingBuddies_DataService", "BrewingBuddies_DataService\BrewingBuddies_DataService.csproj", "{EFDAB387-19E7-4549-B5C6-F61CB49A66AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewingBuddies_BLL", "BrewingBuddies_BLL\BrewingBuddies_BLL.csproj", "{F63BFC2C-9612-4026-9870-77106A2E28ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD814EBD-FA34-4CDB-8D3A-3AB56E8EE689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F63BFC2C-9612-4026-9870-77106A2E28ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F63BFC2C-9612-4026-9870-77106A2E28ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F63BFC2C-9612-4026-9870-77106A2E28ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F63BFC2C-9612-4026-9870-77106A2E28ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

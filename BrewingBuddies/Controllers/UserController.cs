@@ -1,15 +1,20 @@
 ﻿using AutoMapper;
-using BrewingBuddies_DataService.Repositories.Interfaces;
+using BrewingBuddies_BLL.Interfaces.Services;
 using BrewingBuddies_Entitys;
 using BrewingBuddies_Entitys.Dtos.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrewingBuddies.Controllers
 {
-    public class UserController : BaseController
+    // At more checks en return status codes (check the delete function)
+    public class UserController : ControllerBase 
     {
-        public UserController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private IUserService _userService;
+        private IMapper _mapper;
+        public UserController(IUserService userService, IMapper mapper) 
         {
+            _userService = userService;
+            _mapper = mapper;
         }
 
 
@@ -17,67 +22,75 @@ namespace BrewingBuddies.Controllers
         [Route("{userId:guid}")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
-            var users = await _unitOfWork.User.GetById(userId);
+            var userDto = await _userService.GetUserByIdAsync(userId);
 
-            if (users == null)
-                return NotFound("Users not found");
+            if (userDto == null)
+            {
+                return NotFound();
+            }
 
-            var result = _mapper.Map<UserDTO>(users);
-
-            return Ok(result);
+            return Ok(userDto);
         }
 
-        [HttpPost("")]
+        [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] CreateUserRequest user)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var result = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<UserDTO>(user);
+            var createdUserDto = await _userService.AddUserAsync(userDto);
 
-            await _unitOfWork.User.Create(result);
-            await _unitOfWork.CompleteAsync();
-
-            return CreatedAtAction(nameof(GetUser), new { userId = result.Id }, result);
+            return CreatedAtAction(nameof(GetUser), new { userId = createdUserDto.Id }, createdUserDto);
         }
 
-        [HttpPut("")]
+        [HttpPut("updateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest user)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var result = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<UserDTO>(user);
+            var updateResult = await _userService.UpdateUserAsync(userDto);
 
-            await _unitOfWork.User.Update(result);
-            await _unitOfWork.CompleteAsync();
+            if (!updateResult)
+                return NotFound("User not found");
 
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet("GetUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _unitOfWork.User.GetAll();
+            if (!ModelState.IsValid)
+                return BadRequest();
 
-            var result = _mapper.Map<IEnumerable<UserDTO>>(users);
+            var users = await _userService.GetAllUsers();
 
-            return Ok(result);
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
         }
 
-        [HttpDelete]
-        [Route("{UserId:guid}")]
+        [HttpDelete("Delete")]
+        //[Route("{UserId:guid}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            var user = await _unitOfWork.User.GetById(userId);
+            if (!ModelState.IsValid)
+                return BadRequest();
+            try
+            {
+                await _userService.DeleteUser(userId);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
 
-            if (user == null)
-                return NotFound();
-
-            await _unitOfWork.User.Delete(userId);
-            await _unitOfWork.CompleteAsync();
-
-            return NoContent();
+            return StatusCode(200);
         }
     }
 }

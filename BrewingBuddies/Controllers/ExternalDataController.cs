@@ -3,11 +3,13 @@ using BrewingBuddies_RiotClient;
 
 namespace BrewingBuddies.Controllers
 {
+    //Move to the BLL layer
+
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        string apiKey = "RGAPI-62626603-e1ab-4ced-97a8-7108be197977";
+        string apiKey = "RGAPI-d8365b04-57a9-41c0-ae96-8fd17fbf7f67";
 
         [HttpGet("Account")]
         public async Task<IActionResult> GetPlayerData(string gameName, string tagLine)

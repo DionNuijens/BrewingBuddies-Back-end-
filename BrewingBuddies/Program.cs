@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using BrewingBuddies_DataService.Data;
-using BrewingBuddies_DataService.Repositories.Interfaces;
+using BrewingBuddies_BLL.Interfaces.Repositories;
 using BrewingBuddies_DataService.Repositories;
+using BrewingBuddies_BLL.Services;
+using BrewingBuddies_BLL.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString(name: "DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -8,7 +8,7 @@ namespace BrewingBuddies_Entitys.Dtos.Requests
 {
     public class UpdateUserRequest
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
         public string? UserName { get; set; }
     }
 }

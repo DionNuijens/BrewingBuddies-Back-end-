@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using BrewingBuddies_DataService.Repositories.Interfaces;
+using BrewingBuddies_BLL.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using BrewingBuddies_BLL.Interfaces.Services;
 
 namespace BrewingBuddies.Controllers
 {
@@ -11,11 +12,13 @@ namespace BrewingBuddies.Controllers
     {
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IMapper _mapper;
+        protected readonly IUserService _service;
 
-        public BaseController(IUnitOfWork unitOfWork, IMapper mapper)
+        public BaseController(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _service = userService;
         }
     }
 }

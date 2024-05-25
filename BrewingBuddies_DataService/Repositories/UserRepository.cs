@@ -1,5 +1,5 @@
 ﻿using BrewingBuddies_DataService.Data;
-using BrewingBuddies_DataService.Repositories.Interfaces;
+using BrewingBuddies_BLL.Interfaces.Repositories;
 using BrewingBuddies_Entitys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
