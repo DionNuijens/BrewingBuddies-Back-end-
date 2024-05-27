@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'zulu' # Alternative distribution options are availabl
+          distribution: 'zulu' # Alternative distribution options are available
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -37,22 +37,12 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Install Coverlet
-        shell: powershell
-        run: |
-          dotnet tool install --global coverlet.console
-      - name: Install Coverlet Collector
-        shell: powershell
-        run: |
-          cd UnitTests # Navigate to the directory containing UnitTests.csproj
-          dotnet add package coverlet.collector
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.xml"
-          dotnet build --no-incremental
-          coverlet .\UnitTests\bin\Debug\net6.0\UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
