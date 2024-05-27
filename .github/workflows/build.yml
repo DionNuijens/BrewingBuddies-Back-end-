@@ -35,6 +35,8 @@ jobs:
         run: dotnet tool install --global coverlet.console
       - name: Restore NuGet packages
         run: dotnet restore
+      - name: Navigate to test project directory
+        run: cd UnitTests
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
@@ -45,4 +47,3 @@ jobs:
           dotnet build
           coverlet .\bin\Debug\net8.0\UnitTests.dll --target "dotnet" --targetargs "test --no-build" --exclude-by-attribute 'Obsolete' --exclude-by-attribute 'GeneratedCode' --exclude-by-attribute 'CompilerGenerated' --exclude 'BrewingBuddies-Entitys' -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
