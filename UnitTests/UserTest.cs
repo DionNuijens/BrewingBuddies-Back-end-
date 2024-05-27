@@ -23,15 +23,15 @@ namespace UnitTests
             _mockUserRepository = new Mock<IUserRepository>();
         }
 
-        [Fact]
-        public void Test()
-        {
-            int a = 1;
-            int b = 2;
-            int c = a + b;
+        //[Fact]
+        //public void Test()
+        //{
+        //    int a = 1;
+        //    int b = 2;
+        //    int c = a + b;
 
-            Assert.Equal((a + b), c);
-        }
+        //    Assert.Equal((a + b), c);
+        //}
 
         [Fact]
         public async Task GetUserByIdAsync_WithValidUserId_ReturnsUserDTO()
