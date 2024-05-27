@@ -37,12 +37,26 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Install coverlet
+        shell: pwsh
+        run: dotnet tool install --global coverlet.console
+        env:
+          PATH: ${{ env.PATH }}:$HOME\.dotnet\tools
+      - name: Build
+        shell: powershell
+        run: dotnet build
+      - name: Run tests and collect code coverage
+        shell: powershell
+        run: |
+          dotnet test --collect:"XPlat Code Coverage"
+          $coverage = (Get-ChildItem -Path . -Filter "coverage.cobertura.xml" -Recurse | Select-Object -First 1).FullName
+          Write-Host "Coverage report generated at: $coverage"
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportPaths=".\**\coverage.cobertura.xml"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
