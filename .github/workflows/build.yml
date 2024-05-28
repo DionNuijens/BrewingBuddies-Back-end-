@@ -28,7 +28,7 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
-          path: ~/sonar/cache
+          path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
@@ -37,7 +37,7 @@ jobs:
         id: cache-sonar-scanner
         uses: actions/cache@v3
         with:
-          path: .sonar/scanner
+          path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
@@ -46,14 +46,12 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .sonar/scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .sonar/scanner
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
       # Install Coverlet globally
       - name: Install Coverlet
         run: dotnet tool install --global coverlet.console
-        env:
-          PATH: ${{ env.PATH }}:~/.dotnet/tools
 
       # Begin SonarCloud analysis
       - name: SonarScanner Begin
@@ -61,7 +59,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .sonar/scanner/dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"DionNuijens_BrewingBuddies-Back-end-" /o:"dionnuijens" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml"
 
       # Build the project
       - name: Build
@@ -69,14 +67,14 @@ jobs:
 
       # Run tests and generate coverage report
       - name: Run tests and generate coverage report
-        run: coverlet ./bin/Debug/net8.0/UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format opencover --targetargs "test --no-build" --output ./coverage/coverage.opencover.xml
+        run: coverlet .\bin\Debug\net8.0\UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format opencover --targetargs "test --no-build" --output ./coverage/coverage.opencover.xml
 
       # End SonarCloud analysis
       - name: SonarScanner End
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run: .sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       # Upload coverage report as artifact
       - name: Upload coverage report
@@ -84,7 +82,6 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage/coverage.opencover.xml
-
 
 
 
