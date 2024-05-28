@@ -67,7 +67,7 @@ jobs:
 
       # Run tests and generate coverage report
       - name: Run tests and generate coverage report
-        run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format lcov --targetargs "test --no-build" --output ./coverage/lcov.info
+        run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --exclude-by-attribute 'Obsolete' --exclude-by-attribute 'GeneratedCode' --exclude-by-attribute 'CompilerGenerated' --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format lcov --targetargs "test --no-build" --output ./coverage/lcov.info
 
       # Publish coverage report to coveralls.io 
       - name: Publish coverage report to coveralls.io 
