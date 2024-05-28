@@ -67,7 +67,7 @@ jobs:
 
       # Run tests and generate coverage report
       - name: Run tests and generate coverage report
-        run: coverlet .\bin\Debug\net8.0\UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format opencover --targetargs "test --no-build" --output ./coverage/coverage.opencover.xml
+        run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format opencover --targetargs "test --no-build" --output ./coverage/coverage.opencover.xml
 
       # End SonarCloud analysis
       - name: SonarScanner End
