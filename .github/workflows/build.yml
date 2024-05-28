@@ -69,6 +69,12 @@ jobs:
       - name: Run tests and generate coverage report
         run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --exclude "[./BrewingBuddies-Entitys/*]*" --target "dotnet" --format opencover --targetargs "test --no-build" --output ./coverage/coverage.opencover.xml
 
+      - name: Publish coverage report to coveralls.io 
+        uses: coverallsapp/github-action@v1.1.1
+        with:
+            github-token: ${{secrets.COVERALLS_REPO_TOKEN }}
+            path-to-lcov: ./coverage/lcov.info
+
       # End SonarCloud analysis
       - name: SonarScanner End
         env:
