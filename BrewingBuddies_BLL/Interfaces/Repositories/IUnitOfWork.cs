@@ -8,7 +8,8 @@ namespace BrewingBuddies_BLL.Interfaces.Repositories
 {
     public interface IUnitOfWork
     {
-        IUserRepository User { get; }
+        IUserRepository Users { get; }
+        IRegistrationRepository Registration { get; }
 
         Task<bool> CompleteAsync();
     }

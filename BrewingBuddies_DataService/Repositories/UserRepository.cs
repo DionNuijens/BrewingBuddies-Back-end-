@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_DataService.Repositories
 {
-    public class UserRepository : GenericRepository<UserDTO>, IUserRepository
+    public class UserRepository : GenericRepository<LeagueUserEntity>, IUserRepository
     {
         public UserRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
         }
 
-        public override async Task<IEnumerable<UserDTO>> GetAll()
+        public override async Task<IEnumerable<LeagueUserEntity>> GetAll()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace BrewingBuddies_DataService.Repositories
             }
         }
 
-        public override async Task<bool> Update(UserDTO userDTO)
+        public override async Task<bool> Update(LeagueUserEntity userDTO)
         {
             try
             {

@@ -12,7 +12,8 @@ namespace BrewingBuddies_DataService.Data
 {
     public class AppDbContext : DbContext
     {
-        public virtual DbSet<UserDTO> Users { get; set; }
+        public virtual DbSet<LeagueUserEntity> LeagueUsers { get; set; }
+        public virtual DbSet<UserEntity> Users { get; set; }
 
         public AppDbContext() { }
 

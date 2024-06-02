@@ -24,4 +24,8 @@
     <ProjectReference Include="..\BrewingBuddies_BLL\BrewingBuddies_BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

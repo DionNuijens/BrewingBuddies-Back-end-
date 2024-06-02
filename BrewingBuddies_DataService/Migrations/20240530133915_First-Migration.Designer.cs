@@ -3,6 +3,7 @@ using System;
 using BrewingBuddies_DataService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrewingBuddies_DataService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240530133915_First-Migration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +42,7 @@ namespace BrewingBuddies_DataService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeagueUsers");
+                    b.ToTable("LeagueUserEntity");
                 });
 
             modelBuilder.Entity("BrewingBuddies_Entitys.UserEntity", b =>
@@ -56,6 +59,10 @@ namespace BrewingBuddies_DataService.Migrations
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("birthday")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("email")
                         .IsRequired()

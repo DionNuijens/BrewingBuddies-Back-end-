@@ -9,10 +9,10 @@ namespace BrewingBuddies_BLL.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<UserDTO> GetUserByIdAsync(Guid userId);
-        Task<UserDTO> AddUserAsync(UserDTO user);
-        Task<bool> UpdateUserAsync(UserDTO user);
-        Task<IEnumerable<UserDTO>> GetAllUsers();
+        Task<LeagueUserEntity> GetUserByIdAsync(Guid userId);
+        Task<LeagueUserEntity> AddUserAsync(LeagueUserEntity user);
+        Task<bool> UpdateUserAsync(LeagueUserEntity user);
+        Task<IEnumerable<LeagueUserEntity>> GetAllUsers();
         Task<bool> DeleteUser(Guid userId);
 
 

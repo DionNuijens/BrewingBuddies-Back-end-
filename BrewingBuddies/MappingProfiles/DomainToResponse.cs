@@ -9,7 +9,7 @@ namespace BrewingBuddies.MappingProfiles
     {
         public DomainToResponse()
         {
-            CreateMap<UserDTO, UserResponse>()
+            CreateMap<LeagueUserEntity, UserResponse>()
                 .ForMember(
                 dest => dest.UserName,
                 opt => opt.MapFrom(src => src.UserName));

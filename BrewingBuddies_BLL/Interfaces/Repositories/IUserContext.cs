@@ -21,6 +21,6 @@ namespace BrewingBuddies_BLL.Interfaces.Repositories
 
         }
 
-        public virtual DbSet<UserDTO> Users { get; set; }
+        public virtual DbSet<LeagueUserEntity> Users { get; set; }
     }
 }

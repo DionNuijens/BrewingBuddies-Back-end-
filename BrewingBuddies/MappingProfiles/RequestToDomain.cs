@@ -8,7 +8,7 @@ namespace BrewingBuddies.MappingProfiles
     {
         public RequestToDomain() 
         {
-            CreateMap<CreateUserRequest, UserDTO>()
+            CreateMap<CreateUserRequest, LeagueUserEntity>()
                 .ForMember(
                 dest => dest.UserName,
                 opt => opt.MapFrom(src => src.UserName))
@@ -26,7 +26,7 @@ namespace BrewingBuddies.MappingProfiles
                 opt => opt.MapFrom(src => DateTime.UtcNow)
                 );
 
-            CreateMap<UpdateUserRequest, UserDTO>()
+            CreateMap<UpdateUserRequest, LeagueUserEntity>()
                .ForMember(
                dest => dest.UserName,
                opt => opt.MapFrom(src => src.UserName))

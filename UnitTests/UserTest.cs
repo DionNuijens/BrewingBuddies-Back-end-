@@ -38,27 +38,27 @@ namespace UnitTests
         {
             // Arrange
             Guid validUserId = Guid.NewGuid();
-            UserDTO validUser = new UserDTO
+            LeagueUserEntity validUser = new LeagueUserEntity
             {
                 Id = validUserId,
                 UserName = "Test"
             };
-            UserDTO expectedUserDTO = new UserDTO
+            LeagueUserEntity expectedUserDTO = new LeagueUserEntity
             {
                 Id = validUserId,
                 UserName = "Test"
             };
 
             _mockUserRepository.Setup(repo => repo.GetById(validUserId)).ReturnsAsync(validUser);
-            _mockMapper.Setup(mapper => mapper.Map<UserDTO>(validUser)).Returns(expectedUserDTO);
+            _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(validUser)).Returns(expectedUserDTO);
 
             // Here you were using uninitialized mocks, let's initialize them first.
-            _mockUnitOfWork.Setup(uow => uow.User).Returns(_mockUserRepository.Object);
+            _mockUnitOfWork.Setup(uow => uow.Users).Returns(_mockUserRepository.Object);
 
             var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
 
             // Act
-            UserDTO actualUser = await userService.GetUserByIdAsync(validUserId);
+            LeagueUserEntity actualUser = await userService.GetUserByIdAsync(validUserId);
 
             // Assert
             Assert.Equal(expectedUserDTO.Id, actualUser.Id);

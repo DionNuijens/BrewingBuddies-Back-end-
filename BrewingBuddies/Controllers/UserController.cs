@@ -38,7 +38,7 @@ namespace BrewingBuddies.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var userDto = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<LeagueUserEntity>(user);
             var createdUserDto = await _userService.AddUserAsync(userDto);
 
             return CreatedAtAction(nameof(GetUser), new { userId = createdUserDto.Id }, createdUserDto);
@@ -50,7 +50,7 @@ namespace BrewingBuddies.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var userDto = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<LeagueUserEntity>(user);
             var updateResult = await _userService.UpdateUserAsync(userDto);
 
             if (!updateResult)

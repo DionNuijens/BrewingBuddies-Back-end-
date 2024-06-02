@@ -14,14 +14,17 @@ namespace BrewingBuddies_DataService.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context;
-        public IUserRepository User { get; }
+        public IUserRepository Users { get; }
+        public IRegistrationRepository Registration { get; }
+        
 
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
             var logger = loggerFactory.CreateLogger("logs");
 
-            User = new UserRepository(context, logger);
+            Users = new UserRepository(context, logger);
+            Registration = new RegistrationRepository(context, logger);
         }
 
         public async Task<bool> CompleteAsync()
