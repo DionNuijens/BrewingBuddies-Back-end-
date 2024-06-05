@@ -14,7 +14,7 @@ namespace BrewingBuddies_DataService.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context;
-        public IUserRepository Users { get; }
+        public ILeagueUserRepository LeagueUsers { get; }
         public IRegistrationRepository Registration { get; }
         
 
@@ -23,7 +23,7 @@ namespace BrewingBuddies_DataService.Repositories
             _context = context;
             var logger = loggerFactory.CreateLogger("logs");
 
-            Users = new UserRepository(context, logger);
+            LeagueUsers = new LeagueUserRepository(context, logger);
             Registration = new RegistrationRepository(context, logger);
         }
 

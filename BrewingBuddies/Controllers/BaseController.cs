@@ -12,9 +12,9 @@ namespace BrewingBuddies.Controllers
     {
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IMapper _mapper;
-        protected readonly IUserService _service;
+        protected readonly ILeagueUserService _service;
 
-        public BaseController(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService)
+        public BaseController(IUnitOfWork unitOfWork, IMapper mapper, ILeagueUserService userService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

@@ -10,12 +10,12 @@ using BrewingBuddies_BLL.Interfaces.Services;
 
 namespace BrewingBuddies_BLL.Services
 {
-    public class UserService : IUserService
+    public class LeagueUserService : ILeagueUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public LeagueUserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -23,14 +23,14 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<LeagueUserEntity> GetUserByIdAsync(Guid userId)
         {
-            var user = await _unitOfWork.Users.GetById(userId);
+            var user = await _unitOfWork.LeagueUsers.GetById(userId);
             return user != null ? _mapper.Map<LeagueUserEntity>(user) : null;
         }
 
         public async Task<LeagueUserEntity> AddUserAsync(LeagueUserEntity user)
         {
 
-            await _unitOfWork.Users.Create(user);
+            await _unitOfWork.LeagueUsers.Create(user);
             await _unitOfWork.CompleteAsync();
 
             return user;
@@ -40,33 +40,33 @@ namespace BrewingBuddies_BLL.Services
         {
             
 
-            var existingUser = await _unitOfWork.Users.GetById(user.Id);
+            var existingUser = await _unitOfWork.LeagueUsers.GetById(user.Id);
 
             if (existingUser == null)
                 return false; 
 
             _mapper.Map(user, existingUser); 
 
-            await _unitOfWork.Users.Update(user);
+            await _unitOfWork.LeagueUsers.Update(user);
             await _unitOfWork.CompleteAsync();
             return true; 
         }
 
         public async Task<IEnumerable<LeagueUserEntity>> GetAllUsers()
         {
-            var users = await _unitOfWork.Users.GetAll();
+            var users = await _unitOfWork.LeagueUsers.GetAll();
 
             return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
         }
 
         public async Task<bool> DeleteUser(Guid userId)
         {
-            var user = await _unitOfWork.Users.GetById(userId);
+            var user = await _unitOfWork.LeagueUsers.GetById(userId);
 
             if (user == null)
                 return false;
 
-            await _unitOfWork.Users.Delete(userId);
+            await _unitOfWork.LeagueUsers.Delete(userId);
             await _unitOfWork.CompleteAsync();
 
             return true;

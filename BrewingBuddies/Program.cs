@@ -11,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString(name: "DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILeagueUserService, LeagueUserService>();
+builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+
 
 builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

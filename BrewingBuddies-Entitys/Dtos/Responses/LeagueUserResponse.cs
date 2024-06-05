@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrewingBuddies_Entitys.Dtos.Requests
+namespace BrewingBuddies_Entitys.Dtos.Responses
 {
-    public class UpdateUserRequest
+    public class LeagueUserResponse
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public string? UserName { get; set; }
+        public Guid? AccountId { get; set;}
     }
 }

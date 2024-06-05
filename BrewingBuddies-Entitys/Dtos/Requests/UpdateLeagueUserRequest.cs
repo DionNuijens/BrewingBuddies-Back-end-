@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_Entitys.Dtos.Requests
 {
-    public class CreateUserRequest
+    public class UpdateLeagueUserRequest
     {
-        public Guid UserId { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string? UserName { get; set; }
+        public Guid? AccountId { get; set; }
+
     }
 }

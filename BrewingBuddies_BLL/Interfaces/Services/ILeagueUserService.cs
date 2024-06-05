@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_BLL.Interfaces.Services
 {
-    public interface IUserService
+    public interface ILeagueUserService
     {
         Task<LeagueUserEntity> GetUserByIdAsync(Guid userId);
         Task<LeagueUserEntity> AddUserAsync(LeagueUserEntity user);

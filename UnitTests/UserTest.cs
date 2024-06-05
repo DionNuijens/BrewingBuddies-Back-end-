@@ -14,13 +14,13 @@ namespace UnitTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<ILeagueUserRepository> _mockUserRepository;
 
         public UserTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
-            _mockUserRepository = new Mock<IUserRepository>();
+            _mockUserRepository = new Mock<ILeagueUserRepository>();
         }
 
         //[Fact]
@@ -53,9 +53,9 @@ namespace UnitTests
             _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(validUser)).Returns(expectedUserDTO);
 
             // Here you were using uninitialized mocks, let's initialize them first.
-            _mockUnitOfWork.Setup(uow => uow.Users).Returns(_mockUserRepository.Object);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
 
-            var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
 
             // Act
             LeagueUserEntity actualUser = await userService.GetUserByIdAsync(validUserId);

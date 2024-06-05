@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_DataService.Repositories
 {
-    public class UserRepository : GenericRepository<LeagueUserEntity>, IUserRepository
+    public class LeagueUserRepository : GenericRepository<LeagueUserEntity>, ILeagueUserRepository
     {
-        public UserRepository(AppDbContext context, ILogger logger) : base(context, logger)
+        public LeagueUserRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
         }
 
@@ -31,7 +31,7 @@ namespace BrewingBuddies_DataService.Repositories
             }
             catch (Exception e)
             {
-                _logger.LogError(e, message: "{Repo} All function error", typeof(UserRepository));
+                _logger.LogError(e, message: "{Repo} All function error", typeof(LeagueUserRepository));
                 throw;
             }
         }
@@ -53,7 +53,7 @@ namespace BrewingBuddies_DataService.Repositories
             }
             catch (Exception e)
             {
-                _logger.LogError(e, message: "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(e, message: "{Repo} Delete function error", typeof(LeagueUserRepository));
                 throw;
             }
         }
@@ -75,7 +75,7 @@ namespace BrewingBuddies_DataService.Repositories
             }
             catch (Exception e)
             {
-                _logger.LogError(e, message: "{Repo} Update function error", typeof(UserRepository));
+                _logger.LogError(e, message: "{Repo} Update function error", typeof(LeagueUserRepository));
                 throw;
             }
         }

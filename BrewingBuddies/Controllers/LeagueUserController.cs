@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace BrewingBuddies.Controllers
 {
     // At more checks en return status codes (check the delete function)
-    public class UserController : ControllerBase 
+    public class LeagueUserController : ControllerBase 
     {
-        private IUserService _userService;
+        private ILeagueUserService _userService;
         private IMapper _mapper;
-        public UserController(IUserService userService, IMapper mapper) 
+        public LeagueUserController(ILeagueUserService userService, IMapper mapper) 
         {
             _userService = userService;
             _mapper = mapper;
@@ -33,7 +33,7 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpPost("AddUser")]
-        public async Task<IActionResult> AddUser([FromBody] CreateUserRequest user)
+        public async Task<IActionResult> AddUser([FromBody] CreateLeagueUserRequest user)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -45,7 +45,7 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpPut("updateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest user)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateLeagueUserRequest user)
         {
             if (!ModelState.IsValid)
                 return BadRequest();

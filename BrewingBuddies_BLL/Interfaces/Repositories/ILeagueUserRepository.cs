@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_BLL.Interfaces.Repositories
 {
-    public interface IUserRepository : IGenericRepository<LeagueUserEntity>
+    public interface ILeagueUserRepository : IGenericRepository<LeagueUserEntity>
     {
         //Task<IEnumerable<UserDTO>> GetAll();
     }

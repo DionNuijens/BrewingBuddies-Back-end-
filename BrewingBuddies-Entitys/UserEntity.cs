@@ -10,9 +10,9 @@ namespace BrewingBuddies_Entitys
 {
     public class UserEntity : BaseEntity
     {
-        public string email {  get; set; }
-        public string naam { get; set; }
-        public string hash {  get; set; }
+        public string? email {  get; set; }
+        public string? naam { get; set; }
+        public string? hash {  get; set; }
 
     }
 }
