@@ -59,6 +59,21 @@ namespace BrewingBuddies_BLL.Services
             return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
         }
 
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllUsersAccount(Guid id)
+        {
+            var users = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+
+            return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
+        }
+
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id)
+        {
+            var users = await _unitOfWork.LeagueUsers.GetAllFromNotAccount(id);
+
+            return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
+        }
+
+
         public async Task<bool> DeleteUser(Guid userId)
         {
             var user = await _unitOfWork.LeagueUsers.GetById(userId);

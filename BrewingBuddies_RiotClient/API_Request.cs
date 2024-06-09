@@ -64,6 +64,7 @@ namespace BrewingBuddies_RiotClient
                         if (dataObject != null)
                         {
                             dataObject.summonerName = Account.gameName;
+                            dataObject.tagLine = Account.tagLine;
                         }
                         string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented);
                         return json;

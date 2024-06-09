@@ -3,6 +3,7 @@ using System;
 using BrewingBuddies_DataService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrewingBuddies_DataService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240606131133_fixRiot")]
+    partial class fixRiot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +34,6 @@ namespace BrewingBuddies_DataService.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("RiotId")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -46,47 +46,6 @@ namespace BrewingBuddies_DataService.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LeagueUsers");
-                });
-
-            modelBuilder.Entity("BrewingBuddies_Entitys.RequestEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("AddedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("challenger")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("challengerKDA")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("defender")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("defenderKDA")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("winner")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Request");
                 });
 
             modelBuilder.Entity("BrewingBuddies_Entitys.RiotEntity", b =>
@@ -102,6 +61,9 @@ namespace BrewingBuddies_DataService.Migrations
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("leagueUserId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("summonerName")
                         .HasColumnType("longtext");

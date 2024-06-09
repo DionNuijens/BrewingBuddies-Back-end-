@@ -75,6 +75,40 @@ namespace BrewingBuddies.Controllers
             return Ok(users);
         }
 
+        [HttpGet]
+        [Route("account/{AccountId:guid}")]
+        public async Task<IActionResult> GetAllUsersFromAccoutn(Guid AccountId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var users = await _userService.GetAllUsersAccount(AccountId);
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
+        }
+
+        [HttpGet]
+        [Route("NotAccount/{AccountId:guid}")]
+        public async Task<IActionResult> GetAllUsersFromNotAccoutn(Guid AccountId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var users = await _userService.GetAllFromNotAccount(AccountId);
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
+        }
+
         [HttpDelete("Delete")]
         //[Route("{UserId:guid}")]
         public async Task<IActionResult> DeleteUser(Guid userId)

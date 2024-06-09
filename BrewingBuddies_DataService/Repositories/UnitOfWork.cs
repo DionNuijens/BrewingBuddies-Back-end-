@@ -16,6 +16,8 @@ namespace BrewingBuddies_DataService.Repositories
         private readonly AppDbContext _context;
         public ILeagueUserRepository LeagueUsers { get; }
         public IRegistrationRepository Registration { get; }
+        public IRiotRepository RiotUsers { get; }
+        public IRequestRepository Requests { get; }
         
 
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
@@ -25,6 +27,8 @@ namespace BrewingBuddies_DataService.Repositories
 
             LeagueUsers = new LeagueUserRepository(context, logger);
             Registration = new RegistrationRepository(context, logger);
+            RiotUsers = new RiotRepository(context, logger);
+            Requests = new RequestRepository(context, logger);
         }
 
         public async Task<bool> CompleteAsync()

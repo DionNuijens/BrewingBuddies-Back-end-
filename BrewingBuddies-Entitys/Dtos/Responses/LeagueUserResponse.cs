@@ -10,6 +10,8 @@ namespace BrewingBuddies_Entitys.Dtos.Responses
     {
         public Guid UserId { get; set; }
         public string? UserName { get; set; }
+        public string? RiotId { get; set; }
+
         public Guid? AccountId { get; set;}
     }
 }

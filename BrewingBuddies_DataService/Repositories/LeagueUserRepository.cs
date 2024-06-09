@@ -36,6 +36,44 @@ namespace BrewingBuddies_DataService.Repositories
             }
         }
 
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromAccount(Guid id)
+        {
+            try
+            {
+                return await _dbSet.Where(x => x.Status == 1 && x.AccountId == id)
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .OrderBy(x => x.AddedDate)
+                    .ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e, message: "{Repo} All function error", typeof(LeagueUserRepository));
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id)
+        {
+            try
+            {
+                return await _dbSet.Where(x => x.Status == 1 && x.AccountId != id)
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .OrderBy(x => x.AddedDate)
+                    .ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e, message: "{Repo} All function error", typeof(LeagueUserRepository));
+                throw;
+            }
+        }
+
         public override async Task<bool> Delete(Guid id)
         {
             try
@@ -69,6 +107,7 @@ namespace BrewingBuddies_DataService.Repositories
 
                 result.UpdateDate = DateTime.UtcNow;
                 result.UserName = userDTO.UserName;
+                result.RiotId = userDTO.RiotId;
 
                 return true; 
 

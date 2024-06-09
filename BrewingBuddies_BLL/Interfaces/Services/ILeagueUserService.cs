@@ -14,6 +14,8 @@ namespace BrewingBuddies_BLL.Interfaces.Services
         Task<bool> UpdateUserAsync(LeagueUserEntity user);
         Task<IEnumerable<LeagueUserEntity>> GetAllUsers();
         Task<bool> DeleteUser(Guid userId);
+        Task<IEnumerable<LeagueUserEntity>> GetAllUsersAccount(Guid id);
+        Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id); 
 
 
 

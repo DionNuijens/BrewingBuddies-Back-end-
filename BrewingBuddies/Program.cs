@@ -4,6 +4,7 @@ using BrewingBuddies_BLL.Interfaces.Repositories;
 using BrewingBuddies_DataService.Repositories;
 using BrewingBuddies_BLL.Services;
 using BrewingBuddies_BLL.Interfaces.Services;
+using BrewingBuddies_Entitys;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,10 @@ var connectionString = builder.Configuration.GetConnectionString(name: "DefaultC
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ILeagueUserService, LeagueUserService>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<IRiotService, RiotService>();
+builder.Services.AddScoped<IRequestService, RequestService>();
+
+
 
 
 builder.Services.AddControllers();

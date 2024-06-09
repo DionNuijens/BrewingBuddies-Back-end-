@@ -9,7 +9,7 @@ namespace BrewingBuddies.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        string apiKey = "RGAPI-6326ffdc-d12f-44d1-bd92-9965d55bb395";
+        string apiKey = "RGAPI-15fa1a15-1495-42fe-a2da-496fa8026bf3";
 
         [HttpGet("Account")]
         public async Task<IActionResult> GetPlayerData(string gameName, string tagLine)
