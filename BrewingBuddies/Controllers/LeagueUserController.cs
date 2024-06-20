@@ -3,10 +3,12 @@ using BrewingBuddies_BLL.Interfaces.Services;
 using BrewingBuddies_Entitys;
 using BrewingBuddies_Entitys.Dtos.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies.Controllers
 {
     // At more checks en return status codes (check the delete function)
+    //[Authorize]
     public class LeagueUserController : ControllerBase 
     {
         private ILeagueUserService _userService;
@@ -17,6 +19,22 @@ namespace BrewingBuddies.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [Route("account")]
+        public async Task<IActionResult> GetAllUsersFromAccoutn(string AccountId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var users = await _userService.GetAllUsersFromAccount(AccountId);
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
+        }
 
         [HttpGet]
         [Route("{userId:guid}")]
@@ -59,13 +77,30 @@ namespace BrewingBuddies.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetUsers")]
-        public async Task<IActionResult> GetAllUsers()
+        //[HttpGet("GetUsers")]
+        //public async Task<IActionResult> GetAllUsers()
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest();
+
+        //    var users = await _userService.GetAllUsers();
+
+        //    if (users == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(users);
+        //}
+
+        [HttpGet]
+        [Route("ConnectedAccounts")]
+        public async Task<IActionResult> GetAllUsersConnected(string AccountId)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var users = await _userService.GetAllUsers();
+            var users = await _userService.GetAllFromAccountConnected(AccountId);
 
             if (users == null)
             {
@@ -76,25 +111,8 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpGet]
-        [Route("account/{AccountId:guid}")]
-        public async Task<IActionResult> GetAllUsersFromAccoutn(Guid AccountId)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var users = await _userService.GetAllUsersAccount(AccountId);
-
-            if (users == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(users);
-        }
-
-        [HttpGet]
-        [Route("NotAccount/{AccountId:guid}")]
-        public async Task<IActionResult> GetAllUsersFromNotAccoutn(Guid AccountId)
+        [Route("NotAccount")]
+        public async Task<IActionResult> GetAllUsersFromNotAccoutn(string AccountId)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -110,7 +128,6 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpDelete("Delete")]
-        //[Route("{UserId:guid}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
             if (!ModelState.IsValid)

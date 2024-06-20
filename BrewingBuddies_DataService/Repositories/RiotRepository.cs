@@ -14,6 +14,7 @@ namespace BrewingBuddies_DataService.Repositories
     {
         public RiotRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
+
         }
     }
 }

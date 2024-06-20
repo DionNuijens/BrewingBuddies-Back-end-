@@ -10,7 +10,7 @@ namespace BrewingBuddies_BLL.Interfaces.Repositories
     public interface IRegistrationRepository : IGenericRepository<UserEntity>
     {
         //Task<UserEntity> GetByNaam(string naam);
-        Task<UserEntity> GetByNaam(string naam);
+        //Task<UserEntity> GetByNaam(string naam);
 
     }
 }

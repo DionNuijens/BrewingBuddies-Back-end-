@@ -15,50 +15,52 @@ namespace BrewingBuddies_BLL.Services
 {
     public class RegistrationService : IRegistrationService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        //private readonly IUnitOfWork _unitOfWork;
+        //private readonly IMapper _mapper;
 
-        public RegistrationService(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+        //public RegistrationService(IUnitOfWork unitOfWork, IMapper mapper)
+        //{
+        //    _unitOfWork = unitOfWork;
+        //    _mapper = mapper;
+        //}
 
-        public async Task<UserEntity> AddUserAsync(UserEntity user)
-        {
+        //public async Task<UserEntity> AddUserAsync(UserEntity user)
+        //{
 
-            await _unitOfWork.Registration.Create(user);
-            await _unitOfWork.CompleteAsync();
+        //    await _unitOfWork.Registration.Create(user);
+        //    await _unitOfWork.CompleteAsync();
 
-            return user;
-        }
+        //    return user;
+        //}
 
-        public async Task<UserEntity> GetUserByIdAsync(Guid userId)
-        {
-            var user = await _unitOfWork.Registration.GetById(userId);
-            return user != null ? _mapper.Map<UserEntity>(user) : null;
-        }
+        //public async Task<UserEntity> GetUserByIdAsync(Guid userId)
+        //{
+        //    var user = await _unitOfWork.Registration.GetById(userId);
+        //    return user != null ? _mapper.Map<UserEntity>(user) : null;
+        //}
 
-        public async Task<UserEntity> GetUserByNaamAsync(string userName)
-        {
-            return await _unitOfWork.Registration.GetByNaam(userName);
-        }
+        //public async Task<UserEntity> GetUserByNaamAsync(string userName)
+        //{
+        //    return await _unitOfWork.Registration.GetByNaam(userName);
+        //}
 
-        public async Task<UserEntity> LoginAsync(string userName, string hash)
-        {
-            var givenUser = await GetUserByNaamAsync(userName);
+        //public async Task<UserEntity> LoginAsync(string userName, string hash)
+        //{
+        //    var givenUser = await GetUserByNaamAsync(userName);
 
-            if (givenUser == null)
-            {
-                return null;
-            }
-            if(givenUser.naam != userName || givenUser.hash != hash)
-            {
-                return null;
-            }
+        //    if (givenUser == null)
+        //    {
+        //        return null;
+        //    }
+        //    if(givenUser.naam != userName || givenUser.hash != hash)
+        //    {
+        //        return null;
+        //    }
 
-            return givenUser;
-        }
+        //    return givenUser;
+        //}
+
+
 
         //public async Task<UserEntity> GetUserByNameAsync(string userName)
         //{

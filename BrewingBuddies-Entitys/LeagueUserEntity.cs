@@ -10,7 +10,7 @@ namespace BrewingBuddies_Entitys
     {
         public string? UserName { get; set; }
         public string? RiotId { get; set; }
-        public Guid? AccountId { get; set; }
+        public string? AccountId { get; set; }
 
     }
 }

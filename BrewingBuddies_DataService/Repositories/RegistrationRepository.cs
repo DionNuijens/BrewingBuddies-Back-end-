@@ -35,12 +35,12 @@ namespace BrewingBuddies_DataService.Repositories
         //}
 
 
-        public async Task<UserEntity> GetByNaam(string naam)
-        {
-            return await _context.Set<UserEntity>().SingleOrDefaultAsync(u => u.naam == naam);
-        }
+        //public async Task<UserEntity> GetByNaam(string naam)
+        //{
+        //    return await _context.Set<UserEntity>().SingleOrDefaultAsync(u => u.naam == naam);
+        //}
 
-
+       
 
     }
 }

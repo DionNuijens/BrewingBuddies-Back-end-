@@ -53,6 +53,30 @@ namespace BrewingBuddies.MappingProfiles
                opt => opt.MapFrom(src => DateTime.UtcNow)
                );
 
+            CreateMap<UpdateRequestRequest, RequestEntity>()
+                .ForMember(
+                dest => dest.State,
+                opt => opt.MapFrom(src => src.State))
+
+                                .ForMember(
+                dest => dest.challengerKDA,
+                opt => opt.MapFrom(src => src.challengerKDA))
+
+                .ForMember(
+                dest => dest.defenderKDA,
+                opt => opt.MapFrom(src => src.defenderKDA))
+
+                .ForMember(
+                dest => dest.winner,
+                opt => opt.MapFrom(src => src.winner))
+
+
+               .ForMember(
+               dest => dest.UpdateDate,
+               opt => opt.MapFrom(src => DateTime.UtcNow)
+               );
+
+
             CreateMap<CreateRegistrationRequest, UserEntity>()
                  //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
 

@@ -52,25 +52,36 @@ namespace BrewingBuddies_BLL.Services
             return true; 
         }
 
-        public async Task<IEnumerable<LeagueUserEntity>> GetAllUsers()
-        {
-            var users = await _unitOfWork.LeagueUsers.GetAll();
+        //public async Task<IEnumerable<LeagueUserEntity>> GetAllUsers()
+        //{
+        //    var users = await _unitOfWork.LeagueUsers.GetAll();
 
-            return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
-        }
+        //    return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
+        //}
 
-        public async Task<IEnumerable<LeagueUserEntity>> GetAllUsersAccount(Guid id)
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllUsersFromAccount(string id)
         {
             var users = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
 
             return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
         }
 
-        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id)
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(string id)
         {
             var users = await _unitOfWork.LeagueUsers.GetAllFromNotAccount(id);
 
-            return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
+            var connectedUsers = new List<LeagueUserEntity>();
+
+            foreach (var user in users)
+            {
+                if (user.RiotId != null)
+                {
+                    connectedUsers.Add(user);
+                }
+
+            }
+
+            return connectedUsers;
         }
 
 
@@ -86,5 +97,22 @@ namespace BrewingBuddies_BLL.Services
 
             return true;
         }
+
+        public async Task<IEnumerable<LeagueUserEntity>> GetAllFromAccountConnected(string id)
+        {
+            var users = await GetAllUsersFromAccount(id);
+            var connectedUsers = new List<LeagueUserEntity>();
+
+            foreach (var user in users)
+            {
+                if (user.RiotId != null)
+                {
+                    connectedUsers.Add(user);
+                }
+
+            }
+            return connectedUsers;
+        }
+
     }
 }

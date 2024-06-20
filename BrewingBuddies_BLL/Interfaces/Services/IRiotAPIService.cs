@@ -1,5 +1,4 @@
-﻿using BrewingBuddies_Entitys;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_BLL.Interfaces.Services
 {
-    public interface IRiotService
+    public interface IRiotAPIService
     {
-        Task<RiotEntity> LinkAccount(RiotEntity user);
-
-
+        Task<bool> UpdateOngoingChallenge(Guid id, string api_key);
     }
 }

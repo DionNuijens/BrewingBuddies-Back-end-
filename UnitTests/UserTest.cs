@@ -52,7 +52,6 @@ namespace UnitTests
             _mockUserRepository.Setup(repo => repo.GetById(validUserId)).ReturnsAsync(validUser);
             _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(validUser)).Returns(expectedUserDTO);
 
-            // Here you were using uninitialized mocks, let's initialize them first.
             _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
 
             var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);

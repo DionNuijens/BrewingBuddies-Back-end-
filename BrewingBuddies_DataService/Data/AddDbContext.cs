@@ -23,7 +23,6 @@ namespace BrewingBuddies_DataService.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<RequestEntity>()
                 .Property(e => e.challengerKDA)
                 .HasColumnType("decimal(10, 2)");

@@ -9,7 +9,7 @@ namespace BrewingBuddies_BLL.Interfaces.Repositories
 {
     public interface ILeagueUserRepository : IGenericRepository<LeagueUserEntity>
     {
-        Task<IEnumerable<LeagueUserEntity>> GetAllFromAccount(Guid id);
-        Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id);
+        Task<IEnumerable<LeagueUserEntity>> GetAllFromAccount(string id);
+        Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(string id);
     }
 }

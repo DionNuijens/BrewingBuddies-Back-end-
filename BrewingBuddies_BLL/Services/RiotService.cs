@@ -21,7 +21,7 @@ namespace BrewingBuddies_BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<RiotEntity> AddUserAsync(RiotEntity user)
+        public async Task<RiotEntity> LinkAccount(RiotEntity user)
         {
 
             await _unitOfWork.RiotUsers.Create(user);

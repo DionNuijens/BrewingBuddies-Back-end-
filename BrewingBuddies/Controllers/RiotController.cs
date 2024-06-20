@@ -5,9 +5,11 @@ using BrewingBuddies_BLL.Services;
 using BrewingBuddies_Entitys.Dtos.Requests;
 using BrewingBuddies_Entitys;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies.Controllers
 {
+    [Authorize]
     public class RiotController : Controller
     {
         private readonly IMapper _mapper;
@@ -26,9 +28,8 @@ namespace BrewingBuddies.Controllers
                 return false;
 
             var userEntity = _mapper.Map<RiotEntity>(user);
-            var createdUserDto = await _riotRepository.AddUserAsync(userEntity);
+            var createdUserDto = await _riotRepository.LinkAccount(userEntity);
 
-            // Check if the user was successfully added
             return true;
         }
     }

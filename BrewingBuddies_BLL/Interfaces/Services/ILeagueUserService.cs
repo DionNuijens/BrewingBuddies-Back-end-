@@ -12,11 +12,11 @@ namespace BrewingBuddies_BLL.Interfaces.Services
         Task<LeagueUserEntity> GetUserByIdAsync(Guid userId);
         Task<LeagueUserEntity> AddUserAsync(LeagueUserEntity user);
         Task<bool> UpdateUserAsync(LeagueUserEntity user);
-        Task<IEnumerable<LeagueUserEntity>> GetAllUsers();
+        //Task<IEnumerable<LeagueUserEntity>> GetAllUsers();
         Task<bool> DeleteUser(Guid userId);
-        Task<IEnumerable<LeagueUserEntity>> GetAllUsersAccount(Guid id);
-        Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(Guid id); 
-
+        Task<IEnumerable<LeagueUserEntity>> GetAllUsersFromAccount(string id);
+        Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(string id);
+        Task<IEnumerable<LeagueUserEntity>> GetAllFromAccountConnected(string id);
 
 
 

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BrewingBuddies-Entitys\BrewingBuddies-Entitys.csproj" />
+    <ProjectReference Include="..\BrewingBuddies_BLL\BrewingBuddies_BLL.csproj" />
   </ItemGroup>
 
 </Project>
