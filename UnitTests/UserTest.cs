@@ -63,6 +63,30 @@ namespace UnitTests
             Assert.Equal(expectedUserDTO.Id, actualUser.Id);
             Assert.Equal(expectedUserDTO.UserName, actualUser.UserName);
         }
+
+        [Fact]
+        public async Task AddUserAsync_AddsUserAndReturnsTrue()
+        {
+            // Arrange
+            LeagueUserEntity newUser = new LeagueUserEntity
+            {
+                Id = Guid.NewGuid(),
+                UserName = "NewUser"
+            };
+
+            _mockUserRepository.Setup(repo => repo.Create(newUser)).ReturnsAsync(true);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+            //_mockUnitOfWork.Setup(uow => uow.CompleteAsync()).ReturnsAsync(true);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            LeagueUserEntity createdUser = await userService.AddUserAsync(newUser);
+
+            // Assert
+            Assert.Equal(newUser.Id, createdUser.Id);
+            Assert.Equal(newUser.UserName, createdUser.UserName);
+        }
     }
 
     //[Fact]

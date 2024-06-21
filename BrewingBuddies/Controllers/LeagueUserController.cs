@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BrewingBuddies.Controllers
 {
     // At more checks en return status codes (check the delete function)
-    //[Authorize]
+    [Authorize]
     public class LeagueUserController : ControllerBase 
     {
         private ILeagueUserService _userService;

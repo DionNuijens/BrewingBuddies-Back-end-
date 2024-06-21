@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class RequestController : Controller
     {
         private readonly IMapper _mapper;

@@ -10,6 +10,7 @@ using BrewingBuddies_BLL.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
@@ -22,6 +23,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         NameClaimType = ClaimTypes.NameIdentifier
     };
+    //options.ValidateIssuer = true;
 });
 
 // Add services to the container.
@@ -43,9 +45,37 @@ builder.Services.AddSignalR();
 builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        // Define the security scheme for JWT Bearer authentication
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter JWT with Bearer into field",
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+
+        // Define the security requirement
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        new string[] {}
+    }});
+    });
+
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
