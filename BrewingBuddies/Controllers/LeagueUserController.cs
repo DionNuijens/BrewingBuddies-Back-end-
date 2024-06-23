@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies.Controllers
 {
-    // At more checks en return status codes (check the delete function)
     [Authorize]
     public class LeagueUserController : ControllerBase 
     {
@@ -20,128 +19,238 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpGet]
-        [Route("account")]
+        [Route("GetAccounts")]
         public async Task<IActionResult> GetAllUsersFromAccoutn(string AccountId)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-
-            var users = await _userService.GetAllUsersFromAccount(AccountId);
-
-            if (users == null)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            return Ok(users);
+            try
+            {
+                var users = await _userService.GetAllUsersFromAccount(AccountId);
+
+                return Ok(users);
+            }
+            catch (ArgumentException ex)
+            {
+                
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message); 
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                
+               Console.WriteLine($"Unexpected error while retrieving users for account ID '{AccountId}'");
+                return StatusCode(500, "Internal server error"); 
+            }
+
         }
 
         [HttpGet]
         [Route("{userId:guid}")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
-            var userDto = await _userService.GetUserByIdAsync(userId);
-
-            if (userDto == null)
+            try
             {
-                return NotFound();
-            }
+                var userDto = await _userService.GetUserByIdAsync(userId);
 
-            return Ok(userDto);
+                if (userDto == null)
+                {
+                    return NotFound(); 
+                }
+
+                return Ok(userDto); 
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while retrieving user with ID '{userId}'");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] CreateLeagueUserRequest user)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                return BadRequest(ModelState); 
+            }
 
-            var userDto = _mapper.Map<LeagueUserEntity>(user);
-            var createdUserDto = await _userService.AddUserAsync(userDto);
+            try
+            {
+                var userDto = _mapper.Map<LeagueUserEntity>(user);
+                var createdUserDto = await _userService.AddUserAsync(userDto);
 
-            return CreatedAtAction(nameof(GetUser), new { userId = createdUserDto.Id }, createdUserDto);
+                return CreatedAtAction(nameof(GetUser), new { userId = createdUserDto.Id }, createdUserDto);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Invalid user data provided.");
+                return BadRequest(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding user.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
 
-        [HttpPut("updateUser")]
+        [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateLeagueUserRequest user)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                return BadRequest(ModelState); 
+            }
 
-            var userDto = _mapper.Map<LeagueUserEntity>(user);
-            var updateResult = await _userService.UpdateUserAsync(userDto);
+            try
+            {
+                var userDto = _mapper.Map<LeagueUserEntity>(user);
+                var updateResult = await _userService.UpdateUserAsync(userDto);
 
-            if (!updateResult)
-                return NotFound("User not found");
+                if (!updateResult)
+                {
+                    return NotFound("User not found"); 
+                }
 
-            return NoContent();
+                return NoContent(); 
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Invalid user data provided.");
+                return BadRequest(ex.Message); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while updating user.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
 
-        //[HttpGet("GetUsers")]
-        //public async Task<IActionResult> GetAllUsers()
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest();
-
-        //    var users = await _userService.GetAllUsers();
-
-        //    if (users == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(users);
-        //}
 
         [HttpGet]
-        [Route("ConnectedAccounts")]
+        [Route("GetConnectedAccounts")]
         public async Task<IActionResult> GetAllUsersConnected(string AccountId)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-
-            var users = await _userService.GetAllFromAccountConnected(AccountId);
-
-            if (users == null)
             {
-                return NotFound();
+                return BadRequest(ModelState); 
             }
 
-            return Ok(users);
+            try
+            {
+                var users = await _userService.GetAllFromAccountConnected(AccountId);
+
+                if (users == null || users.Count()== 0)
+                {
+                    return NotFound("No connected users found for the provided account ID."); 
+                }
+
+                return Ok(users); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("No users found for the provided account ID.");
+                return NotFound(ex.Message); 
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while retrieving connected users.");
+                return StatusCode(500, "Internal server error"); 
+            }
+
         }
 
         [HttpGet]
-        [Route("NotAccount")]
+        [Route("GetNotAccount")]
         public async Task<IActionResult> GetAllUsersFromNotAccoutn(string AccountId)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var users = await _userService.GetAllFromNotAccount(AccountId);
-
-            if (users == null)
+            try
             {
-                return NotFound();
-            }
+                var users = await _userService.GetAllFromNotAccount(AccountId);
 
-            return Ok(users);
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(users);
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("User not found for deletion.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Unexpected error while retrieving users for account ID '{AccountId}'");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            if (userId == Guid.Empty)
+            {
+                return BadRequest("Invalid user ID."); 
+            }
+
             try
             {
                 await _userService.DeleteUser(userId);
+                return Ok(); 
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return StatusCode(500, e.Message);
+                Console.WriteLine("Invalid user ID provided.");
+                return BadRequest(ex.Message); 
             }
-
-            return StatusCode(200);
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("User not found for deletion.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while deleting user.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
     }
 }

@@ -26,7 +26,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     //options.ValidateIssuer = true;
 });
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString(name: "DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -49,7 +48,6 @@ builder.Services.AddControllers();
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-        // Define the security scheme for JWT Bearer authentication
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
@@ -59,7 +57,7 @@ builder.Services.AddControllers();
             Scheme = "Bearer"
         });
 
-        // Define the security requirement
+
         options.AddSecurityRequirement(new OpenApiSecurityRequirement {
     {
         new OpenApiSecurityScheme
@@ -93,17 +91,14 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     var app = builder.Build();
 
-    //app.UseAuthentication();
-    //app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
 
-    // Apply CORS middleware
+
      app.UseCors(x => x
            .AllowAnyMethod()
            .AllowAnyHeader()

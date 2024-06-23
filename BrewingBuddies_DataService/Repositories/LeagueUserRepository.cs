@@ -18,30 +18,12 @@ namespace BrewingBuddies_DataService.Repositories
         {
         }
 
-        //public override async Task<IEnumerable<LeagueUserEntity>> GetAll()
-        //{
-        //    try
-        //    {
-        //        return await _dbSet.Where(x => x.Status == 1)
-        //            .AsNoTracking()
-        //            .AsSplitQuery()
-        //            .OrderBy(x => x.AddedDate)
-        //            .ToListAsync();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(e, message: "{Repo} All function error", typeof(LeagueUserRepository));
-        //        throw;
-        //    }
-        //}
-
         public async Task<IEnumerable<LeagueUserEntity>> GetAllFromAccount(string accountId)
         {
             try
             {
                 return await _context.LeagueUsers
-                    .Where(x => x.Status == 1 && x.AccountId == accountId)  // Filter by AccountId
+                    .Where(x => x.Status == 1 && x.AccountId == accountId)  
                     .AsNoTracking()
                     .AsSplitQuery()
                     .OrderBy(x => x.AddedDate)

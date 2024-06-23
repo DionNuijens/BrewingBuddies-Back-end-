@@ -216,6 +216,20 @@ namespace IntergrationTests
         }
 
         [Fact]
+        public async Task UpdateRequest_InvalidRequestId_ReturnsFalse()
+        {
+            // Arrange
+
+            RequestEntity invalidRequest = new();
+
+            // Act
+            var result = await _requestRepository.Update(invalidRequest);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
         public async Task DeleteRequest_DeleteRequestFromDatabas()
         {
             Guid requestID = new Guid("01358d6f-0eb6-465d-8f41-480510de6302");
@@ -225,6 +239,19 @@ namespace IntergrationTests
             RequestEntity deletedRequest = _context.Request.FirstOrDefault(u => u.Id == requestID);
 
             Assert.Equal(deletedRequest.Status, 0);
+        }
+
+        [Fact]
+        public async Task DeleteRequest_InvalidRequestId_ReturnsFalse()
+        {
+            // Arrange
+            var invalidRequestId = Guid.NewGuid(); 
+
+            // Act
+            var result = await _requestRepository.DeleteRequest(invalidRequestId);
+
+            // Assert
+            Assert.False(result);
         }
 
     }

@@ -15,7 +15,7 @@ namespace BrewingBuddies.Controllers
     {
         private IRiotAPIService _riotAPIService;
         private IMapper _mapper;
-        private readonly string apiKey = "RGAPI-6463a897-6230-4300-9a04-cd59bb00c85c";
+        private readonly string apiKey = "RGAPI-d9084c39-ea13-46a7-92fd-04fad338dca6";
         public ValuesController(IRiotAPIService riotAPIService, IMapper mapper)
         {
             _riotAPIService = riotAPIService;
@@ -24,7 +24,7 @@ namespace BrewingBuddies.Controllers
 
 
 
-        [HttpPut("update/{id}")]
+        [HttpPut("UpdateRequest/")]
         public async Task<IActionResult> UpdateOngoingChallenge(Guid id )
         {
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -44,27 +44,14 @@ namespace BrewingBuddies.Controllers
             }
         }
 
-        //[HttpGet("Account")]
-        //public async Task<IActionResult> GetPlayerData(string gameName, string tagLine)
-        //{
-        //    try
-        //    {
-        //        var playerData = await API_Request.GetAccountInfo(gameName, tagLine, apiKey);
 
-        //        return Ok(playerData);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
-
-        [HttpGet("Summoner")]
+        [HttpGet("GetSummoner")]
         public async Task<IActionResult> GetSummoner(string gameName, string tagLine)
         {
             try
             {
-                var playerData = await API_Request.GetSummoner(gameName, tagLine, apiKey);
+                
+                var playerData = await _riotAPIService.GetSummonerAsync(gameName, tagLine, apiKey);
 
                 return Ok(playerData);
             }

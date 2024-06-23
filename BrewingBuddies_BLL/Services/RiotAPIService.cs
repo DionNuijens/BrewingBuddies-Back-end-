@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using BrewingBuddies_BLL.Hubs;
 using BrewingBuddies_BLL.Interfaces.Repositories;
 using BrewingBuddies_BLL.Interfaces.Services;
+using BrewingBuddies_Entitys;
 using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -18,20 +20,29 @@ namespace BrewingBuddies_BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private IRiotAPIRepository _riotAPIRepository;
-        //private readonly IHubContext<NotificationHub> _hubContext;
 
         public RiotAPIService(IUnitOfWork unitOfWork, IMapper mapper, IRiotAPIRepository riotAPI)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _riotAPIRepository = riotAPI;
-            //_hubContext = hubContext;
         }
 
-        //public async Task NotifyUsersAsync(string id, string message)
-        //{
-        //    await _hubContext.Clients.User(id).SendAsync("ReceiveNotification", message);
-        //}
+
+
+        public async Task<string> GetSummonerAsync(string gameName, string tagLine, string apiKey)
+        {
+            try
+            {
+                var playerData = await _riotAPIRepository.GetSummoner(gameName, tagLine, apiKey);
+                return playerData;
+            }
+            catch (Exception ex)
+            {
+                throw; 
+            }
+        }
+
 
         public async Task<bool> UpdateOngoingChallenge(Guid id, string api_key)
         {
@@ -60,7 +71,6 @@ namespace BrewingBuddies_BLL.Services
 
                 if (MatchCounter == 0) 
                 {
-                    //await _hubContext.Clients.User(challenger.AccountId).SendAsync("ReceiveNotification", $"{ challenger.UserName} still has to play a game!");
                     return false; 
                 }
 
@@ -82,7 +92,6 @@ namespace BrewingBuddies_BLL.Services
 
                 if (MatchCounter == 0)
                 {
-                    //await _hubContext.Clients.User(challenger.AccountId).SendAsync("ReceiveNotification", $"{defender.UserName} still has to play a game!");
                     return false;
                 }
 

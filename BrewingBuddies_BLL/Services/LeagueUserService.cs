@@ -23,13 +23,20 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<LeagueUserEntity> GetUserByIdAsync(Guid userId)
         {
+            if (userId== null)
+            {
+                throw new ArgumentException("User ID is not filled in.");
+            }
             var user = await _unitOfWork.LeagueUsers.GetById(userId);
             return user != null ? _mapper.Map<LeagueUserEntity>(user) : null;
         }
 
         public async Task<LeagueUserEntity> AddUserAsync(LeagueUserEntity user)
         {
-
+            if (string.IsNullOrWhiteSpace(user.UserName))
+            {
+                throw new ArgumentException("User is not filled in.");
+            }
             await _unitOfWork.LeagueUsers.Create(user);
             await _unitOfWork.CompleteAsync();
 
@@ -38,12 +45,15 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<bool> UpdateUserAsync(LeagueUserEntity user)
         {
-            
+            if (string.IsNullOrWhiteSpace(user.UserName) || user.Id == null)
+            {
+                throw new ArgumentException("User or User ID is not filled in."); 
+            }
 
             var existingUser = await _unitOfWork.LeagueUsers.GetById(user.Id);
 
             if (existingUser == null)
-                return false; 
+                throw new InvalidOperationException("There is no user for this ID"); 
 
             _mapper.Map(user, existingUser); 
 
@@ -52,22 +62,32 @@ namespace BrewingBuddies_BLL.Services
             return true; 
         }
 
-        //public async Task<IEnumerable<LeagueUserEntity>> GetAllUsers()
-        //{
-        //    var users = await _unitOfWork.LeagueUsers.GetAll();
 
-        //    return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
-        //}
 
         public async Task<IEnumerable<LeagueUserEntity>> GetAllUsersFromAccount(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("User ID is not filled in."); 
+            }
+
             var users = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+            if(users.Count() == 0)
+            {
+                throw new InvalidCastException($"No users found for account with ID '{id}'.");
+
+            }
 
             return _mapper.Map<IEnumerable<LeagueUserEntity>>(users);
         }
 
         public async Task<IEnumerable<LeagueUserEntity>> GetAllFromNotAccount(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("User ID is not filled in."); 
+            }
+
             var users = await _unitOfWork.LeagueUsers.GetAllFromNotAccount(id);
 
             var connectedUsers = new List<LeagueUserEntity>();
@@ -81,16 +101,26 @@ namespace BrewingBuddies_BLL.Services
 
             }
 
+            if (connectedUsers.Count() == 0)
+            {
+                throw new InvalidCastException($"No users found for account with ID '{id}'.");
+
+            }
+
             return connectedUsers;
         }
 
 
         public async Task<bool> DeleteUser(Guid userId)
         {
+            if (userId == null)
+            {
+                throw new ArgumentException("User ID is not filled in."); 
+            }
             var user = await _unitOfWork.LeagueUsers.GetById(userId);
 
             if (user == null)
-                return false;
+                throw new InvalidOperationException("There is no user for this ID");
 
             await _unitOfWork.LeagueUsers.Delete(userId);
             await _unitOfWork.CompleteAsync();
@@ -100,17 +130,29 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<IEnumerable<LeagueUserEntity>> GetAllFromAccountConnected(string id)
         {
-            var users = await GetAllUsersFromAccount(id);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("User ID is not filled in."); 
+            }
+
+
+            var users = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+
+            if (users == null)
+            {
+                throw new InvalidCastException("Unable to get users"); 
+            }
+
             var connectedUsers = new List<LeagueUserEntity>();
 
             foreach (var user in users)
             {
-                if (user.RiotId != null)
+                if (!string.IsNullOrWhiteSpace(user.RiotId))
                 {
-                    connectedUsers.Add(user);
+                    connectedUsers.Add(user); 
                 }
-
             }
+
             return connectedUsers;
         }
 

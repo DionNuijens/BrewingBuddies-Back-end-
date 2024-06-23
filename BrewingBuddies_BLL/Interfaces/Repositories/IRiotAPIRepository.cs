@@ -11,5 +11,8 @@ namespace BrewingBuddies_BLL.Interfaces.Repositories
         Task<List<string>> GetMatchIDs(string api_key, string puuid);
         Task<DateTime?> GetMatchStartTimeAsync(string apiKey, string matchId);
         Task<decimal?> GetKdaAsync(string apiKey, string matchId, string summonerId);
+        Task<string> GetSummoner(string gameName, string tagLine, string apiKey);
+
+
     }
 }

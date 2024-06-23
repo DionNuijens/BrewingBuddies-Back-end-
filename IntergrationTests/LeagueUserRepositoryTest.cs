@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntergrationTests
 {
     public class LeagueUserRepositoryTest : IDisposable
     {
@@ -127,6 +127,23 @@ namespace IntegrationTests
             Assert.Equal(ExpectedUser.UserName, User.UserName);
         }
 
+        public async Task UpdateUser_InvalidUserId_ReturnsFalse()
+        {
+            // Arrange
+            var invalidUserId = Guid.NewGuid(); 
+            var user = new LeagueUserEntity
+            {
+                Id = invalidUserId,
+                UserName = "UpdatedUser"
+            };
+
+            // Act
+            var result = await _userRepository.Update(user);
+
+            // Assert
+            Assert.False(result);
+        }
+
         [Fact]
         public async Task DeleteUser_DeletesUserFromDatabase()
         {
@@ -137,6 +154,21 @@ namespace IntegrationTests
 
             Assert.Equal(deletedUser?.Status, 0);
         }
+
+        [Fact]
+        public async Task DeleteUser_InvalidUserId_ReturnsFalse()
+        {
+            // Arrange
+            var invalidUserId = Guid.NewGuid(); 
+
+            // Act
+            var result = await _userRepository.Delete(invalidUserId);
+
+            // Assert
+            Assert.False(result);
+        }
+
+
 
 
 

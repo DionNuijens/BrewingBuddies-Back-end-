@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies_BLL.Hubs
 {
-    //[Authorize]
+    [Authorize]
     public class NotificationHub : Hub
     {
 

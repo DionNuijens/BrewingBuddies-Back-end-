@@ -22,24 +22,40 @@ namespace BrewingBuddies.Controllers
         }
 
         [HttpPost("AddRequest")]
-        public async Task<bool> AddUser([FromBody] CreateRequestRequest request)
+        public async Task<IActionResult> AddRequest([FromBody] CreateRequestRequest request)
         {
             if (!ModelState.IsValid)
-                return false;
+            {
+                return BadRequest(ModelState); 
+            }
 
-            var requestEntity = _mapper.Map<RequestEntity>(request);
-            var createRequestDTO = await _requestService.AddRequest(requestEntity);
+            try
+            {
+                var requestEntity = _mapper.Map<RequestEntity>(request);
+                await _requestService.AddRequest(requestEntity);
 
-            return true;
+                return Ok(true);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Invalid request data provided.");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet]
-        [Route("challenger")]
+        [Route("GetPending")]
         public async Task<IActionResult> GetAllRequests(string AccountID)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-
+            try
+            {
             var users = await _requestService.GetAllPending(AccountID);
 
             if (users == null)
@@ -48,15 +64,34 @@ namespace BrewingBuddies.Controllers
             }
 
             return Ok(users);
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
 
         [HttpGet]
-        [Route("defender")]
+        [Route("GetReceived")]
         public async Task<IActionResult> GetAllRequestss(string AccountID)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-
+            try
+            {
             var users = await _requestService.GetAllReceived(AccountID);
 
             if (users == null)
@@ -65,12 +100,27 @@ namespace BrewingBuddies.Controllers
             }
 
             return Ok(users);
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
         }
 
         [HttpGet]
-        [Route("ongoing")]
+        [Route("GetOngoing")]
         public async Task<IActionResult> GetAllRequestsss(string AccountID)
         {
+            try
+            {
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -82,15 +132,34 @@ namespace BrewingBuddies.Controllers
             }
 
             return Ok(users);
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
 
         [HttpGet]
-        [Route("complete")]
+        [Route("GetComplete")]
         public async Task<IActionResult> GetAllComplete(string AccountID)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-
+            try
+            {
             var users = await _requestService.GetAllComplete(AccountID);
 
             if (users == null)
@@ -99,11 +168,31 @@ namespace BrewingBuddies.Controllers
             }
 
             return Ok(users);
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
 
         [HttpPut("updateRequest")]
         public async Task<IActionResult> UpdateRequest([FromBody] UpdateRequestRequest user)
         {
+            try
+            {
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -114,7 +203,26 @@ namespace BrewingBuddies.Controllers
                 return NotFound("User not found");
 
             return NoContent();
+
+            }
+            catch (ArgumentException ex)
+            {
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error"); 
+            }
         }
+
 
         [HttpDelete("DeleteRequest")]
         public async Task<IActionResult> DeleteRequest(Guid userId)
@@ -124,13 +232,25 @@ namespace BrewingBuddies.Controllers
             try
             {
                 await _requestService.DeleteRuest(userId);
+                return StatusCode(200);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return StatusCode(500, e.Message);
+
+                Console.WriteLine($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("User not found for update.");
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error");
             }
 
-            return StatusCode(200);
         }
 
 

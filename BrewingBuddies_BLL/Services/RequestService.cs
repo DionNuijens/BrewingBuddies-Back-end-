@@ -3,14 +3,13 @@ using BrewingBuddies_BLL.Hubs;
 using BrewingBuddies_BLL.Interfaces.Repositories;
 using BrewingBuddies_BLL.Interfaces.Services;
 using BrewingBuddies_Entitys;
-//using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using BrewingBuddies.Hub; 
+
 
 namespace BrewingBuddies_BLL.Services
 {
@@ -27,21 +26,13 @@ namespace BrewingBuddies_BLL.Services
             _hub = hub;
         }
 
-        //public async Task NotifyUsersAsync(string message)
-        //{
-        //    await _hub.Clients.All.SendAsync("ReceiveNotification", message);
-        //}
+ 
 
         public async Task<RequestEntity> AddRequest(RequestEntity request)
         {
-            if(request.defender == null)
+            if (request.defender == null || request.challenger == null)
             {
-                return null;
-            }
-
-            if (request.challenger == null)
-            {
-                return null;
+                throw new ArgumentException("Defender or Challenger cannot be null."); 
             }
 
             request.winner = "";
@@ -55,6 +46,10 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<IEnumerable<RequestObject>> GetAllPending(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
@@ -84,12 +79,21 @@ namespace BrewingBuddies_BLL.Services
                 }
 
             }
-                return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
+            if (requestObjects == null)
+            {
+                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
+
+            }
+            return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
 
         }
 
         public async Task<IEnumerable<RequestObject>> GetAllReceived(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
@@ -119,12 +123,21 @@ namespace BrewingBuddies_BLL.Services
                 }
 
             }
+            if (requestObjects == null)
+            {
+                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
+
+            }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
 
         }
 
         public async Task<IEnumerable<RequestObject>> GetAllOngoing(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
@@ -154,11 +167,20 @@ namespace BrewingBuddies_BLL.Services
                 }
 
             }
+            if (requestObjects == null)
+            {
+                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
+
+            }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
 
         }
         public async Task<IEnumerable<RequestObject>> GetAllComplete(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
@@ -188,17 +210,26 @@ namespace BrewingBuddies_BLL.Services
                 }
 
             }
+            if (requestObjects == null)
+            {
+                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
+
+            }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
 
         }
 
         public async Task<bool> UpdateRequestAsync(RequestEntity request)
         {
+            if (request.Id == null)
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
 
             var existingRequest = await _unitOfWork.Requests.GetById(request.Id);
 
             if (existingRequest == null)
-                return false;
+                throw new InvalidOperationException("There is no user for this ID");
 
             _mapper.Map(request, existingRequest);
 
@@ -213,34 +244,17 @@ namespace BrewingBuddies_BLL.Services
             return true;
         }
 
-        //public async Task<bool> UpdateRequestCompleteAsync(RequestEntity request)
-        //{
-
-        //    var existingRequest = await _unitOfWork.Requests.GetById(request.Id);
-
-        //    if (existingRequest == null)
-        //        return false;
-
-        //    _mapper.Map(request, existingRequest);
-
-        //    await _unitOfWork.Requests.Update(request);
-        //    await _unitOfWork.CompleteAsync();
-
-        //    return true;
-        //}
-
-        //public async Task<RequestEntity> GetRequestByIdAsync(Guid requestId)
-        //{
-        //    var request = await _unitOfWork.Requests.GetById(requestId);
-        //    return request != null ? _mapper.Map<RequestEntity>(request) : null;
-        //}
 
         public async Task<bool> DeleteRuest(Guid userId)
         {
+            if (userId == null)
+            {
+                throw new ArgumentException("Request ID is not filled in."); 
+            }
             var user = await _unitOfWork.Requests.GetById(userId);
 
             if (user == null)
-                return false;
+                throw new InvalidOperationException("There is no user for this ID");
 
             await _unitOfWork.Requests.DeleteRequest(userId);
             await _unitOfWork.CompleteAsync();

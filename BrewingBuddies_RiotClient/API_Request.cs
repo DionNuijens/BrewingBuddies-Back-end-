@@ -49,7 +49,7 @@ namespace BrewingBuddies_RiotClient
             }
         }
 
-        public static async Task<string> GetSummoner(string gameName, string tagLine, string apiKey)
+        public async Task<string> GetSummoner(string gameName, string tagLine, string apiKey)
         {
             var Account = await GetUuid(gameName, tagLine, apiKey);
 
@@ -86,36 +86,6 @@ namespace BrewingBuddies_RiotClient
                      return null;
                 }
 
-            }
-        }
-        public static async Task<string> GetAccountInfo(string gameName, string tagLine, string apiKey)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    string apiUrl = $"https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}?api_key={apiKey}";
-
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseData = await response.Content.ReadAsStringAsync();
-
-                        return responseData;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"API request failed with status code: {response.StatusCode}");
-                        return null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-
-                    return null;
-                }
             }
         }
 
@@ -170,10 +140,8 @@ namespace BrewingBuddies_RiotClient
                         string responseData = await response.Content.ReadAsStringAsync();
                         JObject matchData = JObject.Parse(responseData);
 
-                        // The match start time is in Unix milliseconds format under "gameStartTimestamp"
                         long gameStartTimestamp = matchData["info"]["gameStartTimestamp"].Value<long>();
 
-                        // Convert Unix milliseconds to DateTime UTC
                         DateTime matchStartTime = DateTimeOffset.FromUnixTimeMilliseconds(gameStartTimestamp).UtcDateTime;
 
                         return matchStartTime;
@@ -213,7 +181,6 @@ namespace BrewingBuddies_RiotClient
                         JObject matchData = JObject.Parse(responseData);
                         JArray participants = (JArray)matchData["info"]["participants"];
 
-                        // Find participantId for the summoner
                         foreach (var participant in participants)
                         {
                             if (participant["puuid"].ToString() == summonerId)
