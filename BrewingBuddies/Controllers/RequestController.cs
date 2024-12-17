@@ -31,12 +31,13 @@ namespace BrewingBuddies.Controllers
 
             try
             {
+                // in de Logica laag
                 var requestEntity = _mapper.Map<RequestEntity>(request);
                 await _requestService.AddRequest(requestEntity);
 
-                return Ok(true);
+                return StatusCode(201, requestEntity);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
                 Console.WriteLine("Invalid request data provided.");
                 return BadRequest(ex.Message);
@@ -56,17 +57,17 @@ namespace BrewingBuddies.Controllers
                 return BadRequest();
             try
             {
-            var users = await _requestService.GetAllPending(AccountID);
+            var Pending = await _requestService.GetAllPending(AccountID);
 
-            if (users == null)
-            {
-                return NotFound();
+            //if (users == null)
+            //{
+            //    return NotFound();
+            //}
+
+            return Ok(Pending);
+
             }
-
-            return Ok(users);
-
-            }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
@@ -86,61 +87,66 @@ namespace BrewingBuddies.Controllers
 
         [HttpGet]
         [Route("GetReceived")]
-        public async Task<IActionResult> GetAllRequestss(string AccountID)
+        public async Task<IActionResult> GetReceived(string AccountID)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
             try
             {
-            var users = await _requestService.GetAllReceived(AccountID);
+            var Recieved = await _requestService.GetAllReceived(AccountID);
 
-            if (users == null)
-            {
-                return NotFound();
+            //if (users == null)
+            //{
+            //    return NotFound();
+            //}
+
+            return Ok(Recieved);
+
             }
-
-            return Ok(users);
-
-            }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("User not found for update.");
                 return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred while adding request.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
         [Route("GetOngoing")]
-        public async Task<IActionResult> GetAllRequestsss(string AccountID)
+        public async Task<IActionResult> GetAllOngoing(string AccountID)
         {
-            try
-            {
             if (!ModelState.IsValid)
                 return BadRequest();
+            try
+            {
 
             var users = await _requestService.GetAllOngoing(AccountID);
 
-            if (users == null)
-            {
-                return NotFound();
-            }
+            //if (users == null)
+            //{
+            //    return NotFound();
+            //}
 
             return Ok(users);
 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("User not found for update.");
                 return NotFound(ex.Message); 
@@ -162,21 +168,21 @@ namespace BrewingBuddies.Controllers
             {
             var users = await _requestService.GetAllComplete(AccountID);
 
-            if (users == null)
-            {
-                return NotFound();
-            }
+            //if (users == null)
+            //{
+            //    return NotFound();
+            //}
 
             return Ok(users);
 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("User not found for update.");
                 return NotFound(ex.Message); 
@@ -191,27 +197,28 @@ namespace BrewingBuddies.Controllers
         [HttpPut("updateRequest")]
         public async Task<IActionResult> UpdateRequest([FromBody] UpdateRequestRequest user)
         {
-            try
-            {
             if (!ModelState.IsValid)
                 return BadRequest();
+            try
+            {
 
+            //in de Logia laag
             var userDto = _mapper.Map<RequestEntity>(user);
             var updateResult = await _requestService.UpdateRequestAsync(userDto);
 
-            if (!updateResult)
-                return NotFound("User not found");
+            //if (!updateResult)
+            //    return NotFound("User not found");
 
-            return NoContent();
+            return Ok(updateResult);
 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("User not found for update.");
                 return NotFound(ex.Message); 
@@ -232,15 +239,15 @@ namespace BrewingBuddies.Controllers
             try
             {
                 await _requestService.DeleteRuest(userId);
-                return StatusCode(200);
+                return NoContent();
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("User not found for update.");
                 return NotFound(ex.Message);

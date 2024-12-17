@@ -33,15 +33,15 @@ namespace BrewingBuddies.Controllers
 
                 return Ok(users);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
                 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message); 
             }
-            catch (InvalidCastException ex)
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine("User not found for update.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return NotFound(ex.Message); 
             }
             catch (Exception ex)
@@ -53,33 +53,33 @@ namespace BrewingBuddies.Controllers
 
         }
 
-        [HttpGet]
-        [Route("{userId:guid}")]
-        public async Task<IActionResult> GetUser(Guid userId)
-        {
-            try
-            {
-                var userDto = await _userService.GetUserByIdAsync(userId);
+        //[HttpGet]
+        //[Route("{userId:guid}")]
+        //public async Task<IActionResult> GetUser(Guid userId)
+        //{
+        //    try
+        //    {
+        //        var userDto = await _userService.GetUserByIdAsync(userId);
 
-                if (userDto == null)
-                {
-                    return NotFound(); 
-                }
+        //        if (userDto == null)
+        //        {
+        //            return NotFound(); 
+        //        }
 
-                return Ok(userDto); 
-            }
-            catch (ArgumentException ex)
-            {
+        //        return Ok(userDto); 
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
 
-                Console.WriteLine($"Invalid argument: {ex.Message}");
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error while retrieving user with ID '{userId}'");
-                return StatusCode(500, "Internal server error");
-            }
-        }
+        //        Console.WriteLine($"Invalid argument: {ex.Message}");
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error while retrieving user with ID '{userId}'");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] CreateLeagueUserRequest user)
@@ -91,14 +91,13 @@ namespace BrewingBuddies.Controllers
 
             try
             {
-                var userDto = _mapper.Map<LeagueUserEntity>(user);
-                var createdUserDto = await _userService.AddUserAsync(userDto);
+                var createdUserDto = await _userService.AddUserAsync(user);
 
-                return CreatedAtAction(nameof(GetUser), new { userId = createdUserDto.Id }, createdUserDto);
+                return StatusCode(201, createdUserDto);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
-                Console.WriteLine("Invalid user data provided.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message); 
             }
             catch (Exception ex)
@@ -118,19 +117,20 @@ namespace BrewingBuddies.Controllers
 
             try
             {
+                //in de logica laag
                 var userDto = _mapper.Map<LeagueUserEntity>(user);
                 var updateResult = await _userService.UpdateUserAsync(userDto);
 
-                if (!updateResult)
-                {
-                    return NotFound("User not found"); 
-                }
+                //if (!updateResult)
+                //{
+                //    return NotFound("User not found"); 
+                //}
 
-                return NoContent(); 
+                return Ok(updateResult); 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
-                Console.WriteLine("Invalid user data provided.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message); 
             }
             catch (InvalidOperationException ex)
@@ -159,19 +159,19 @@ namespace BrewingBuddies.Controllers
             {
                 var users = await _userService.GetAllFromAccountConnected(AccountId);
 
-                if (users == null || users.Count()== 0)
-                {
-                    return NotFound("No connected users found for the provided account ID."); 
-                }
+                //if (users == null || users.Count()== 0)
+                //{
+                //    return NotFound("No connected users found for the provided account ID."); 
+                //}
 
                 return Ok(users); 
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine("No users found for the provided account ID.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return NotFound(ex.Message); 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
@@ -196,15 +196,15 @@ namespace BrewingBuddies.Controllers
             {
                 var users = await _userService.GetAllFromNotAccount(AccountId);
 
-                if (users == null)
-                {
-                    return NotFound();
-                }
+                //if (users == null)
+                //{
+                //    return NotFound();
+                //}
 
                 return Ok(users);
 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
 
                 Console.WriteLine($"Invalid argument: {ex.Message}");
@@ -212,7 +212,7 @@ namespace BrewingBuddies.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine("User not found for deletion.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return NotFound(ex.Message); 
             }
             catch (Exception ex)
@@ -226,24 +226,26 @@ namespace BrewingBuddies.Controllers
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            if (userId == Guid.Empty)
-            {
-                return BadRequest("Invalid user ID."); 
-            }
+            //if (userId == Guid.Empty)
+            //{
+            //    return BadRequest("Invalid user ID."); 
+            //}
+            if (!ModelState.IsValid)
+                return BadRequest();
 
             try
             {
                 await _userService.DeleteUser(userId);
-                return Ok(); 
+                return NoContent(); 
             }
-            catch (ArgumentException ex)
+            catch (ArgumentNullException ex)
             {
-                Console.WriteLine("Invalid user ID provided.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message); 
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine("User not found for deletion.");
+                Console.WriteLine($"Invalid argument: {ex.Message}");
                 return NotFound(ex.Message); 
             }
             catch (Exception ex)

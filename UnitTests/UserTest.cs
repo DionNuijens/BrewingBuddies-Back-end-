@@ -7,6 +7,7 @@ using BrewingBuddies_BLL.Services;
 using BrewingBuddies_BLL.Interfaces;
 using BrewingBuddies_BLL.Interfaces.Repositories;
 using AutoMapper;
+using BrewingBuddies_Entitys.Dtos.Requests;
 
 namespace UnitTests
 {
@@ -63,14 +64,18 @@ namespace UnitTests
                 Id = Guid.NewGuid(),
                 UserName = "NewUser"
             };
-
+            CreateLeagueUserRequest user = new CreateLeagueUserRequest
+            {               
+                UserName = "NewUser"
+            };
+            _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(user)).Returns(newUser);
             _mockUserRepository.Setup(repo => repo.Create(newUser)).ReturnsAsync(true);
             _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
 
             var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
 
             // Act
-            LeagueUserEntity createdUser = await userService.AddUserAsync(newUser);
+            LeagueUserEntity createdUser = await userService.AddUserAsync(user);
 
             // Assert
             Assert.Equal(newUser.Id, createdUser.Id);
@@ -124,7 +129,7 @@ namespace UnitTests
             var userService = new LeagueUserService(mockUnitOfWork.Object, mockMapper.Object);
 
             // Act and Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await userService.UpdateUserAsync(invalidUser);
             });
@@ -191,7 +196,7 @@ namespace UnitTests
 
             // Assert
             Assert.NotNull(ex);
-            Assert.Equal("There is no user for this ID", ex.Message);
+            Assert.Equal("Unable to find user from account.", ex.Message);
         }
 
         [Fact]

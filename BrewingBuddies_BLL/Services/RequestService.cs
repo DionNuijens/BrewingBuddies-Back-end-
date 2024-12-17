@@ -30,14 +30,14 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<RequestEntity> AddRequest(RequestEntity request)
         {
-            if (request.defender == null || request.challenger == null)
-            {
-                throw new ArgumentException("Defender or Challenger cannot be null."); 
-            }
 
             request.winner = "";
             request.State = 0;
 
+            if (request.defender == Guid.Empty || request.challenger == Guid.Empty)
+            {
+                throw new ArgumentNullException("Defender and/or Challenger cannot be null."); 
+            }
             await _unitOfWork.Requests.Create(request);
             await _unitOfWork.CompleteAsync();
 
@@ -48,14 +48,23 @@ namespace BrewingBuddies_BLL.Services
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Account ID is not filled in."); 
             }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+            if (loop == null)
+            {
+                throw new InvalidOperationException($"Undable to get users");
+
+            }
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
             {
                 var users = await _unitOfWork.Requests.GetAllPending(item.Id);
+                if (users == null)
+                {
+                    throw new InvalidOperationException($"Undable to get {item.UserName} pending requests");
 
+                }
                 foreach (var user in users)
                 {
                     var challengerUser = await _unitOfWork.LeagueUsers.GetById(user.challenger); 
@@ -77,11 +86,6 @@ namespace BrewingBuddies_BLL.Services
 
                     requestObjects.Add(requestObject);
                 }
-
-            }
-            if (requestObjects == null)
-            {
-                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
 
             }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
@@ -92,13 +96,23 @@ namespace BrewingBuddies_BLL.Services
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Account ID is not filled in."); 
             }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+            if (loop == null)
+            {
+                throw new InvalidOperationException($"Undable to get users");
+
+            }
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
             {
                 var users = await _unitOfWork.Requests.GetAllReceived(item.Id);
+                if (users == null)
+                {
+                    throw new InvalidOperationException($"Undable to get {item.UserName} Received requests");
+
+                }
 
                 foreach (var user in users)
                 {
@@ -121,11 +135,6 @@ namespace BrewingBuddies_BLL.Services
 
                     requestObjects.Add(requestObject);
                 }
-
-            }
-            if (requestObjects == null)
-            {
-                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
 
             }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
@@ -136,13 +145,23 @@ namespace BrewingBuddies_BLL.Services
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Account ID is not filled in."); 
             }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+            if (loop == null)
+            {
+                throw new InvalidOperationException($"Undable to get users");
+
+            }
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
             {
                 var users = await _unitOfWork.Requests.GetAllOngoing(item.Id);
+                if (users == null)
+                {
+                    throw new InvalidOperationException($"Undable to get {item.UserName} Ongoing requests");
+
+                }
 
                 foreach (var user in users)
                 {
@@ -165,11 +184,6 @@ namespace BrewingBuddies_BLL.Services
 
                     requestObjects.Add(requestObject);
                 }
-
-            }
-            if (requestObjects == null)
-            {
-                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
 
             }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
@@ -179,13 +193,23 @@ namespace BrewingBuddies_BLL.Services
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Account ID is not filled in."); 
             }
             var loop = await _unitOfWork.LeagueUsers.GetAllFromAccount(id);
+            if (loop == null)
+            {
+                throw new InvalidOperationException($"Undable to get users");
+
+            }
             var requestObjects = new List<RequestObject>();
             foreach (var item in loop)
             {
                 var users = await _unitOfWork.Requests.GetAllComplete(item.Id);
+                if (users == null)
+                {
+                    throw new InvalidOperationException($"Undable to get {item.UserName} Complete requests");
+
+                }
 
                 foreach (var user in users)
                 {
@@ -210,28 +234,23 @@ namespace BrewingBuddies_BLL.Services
                 }
 
             }
-            if (requestObjects == null)
-            {
-                throw new InvalidCastException($"No requests found for account with ID '{id}'.");
-
-            }
             return _mapper.Map<IEnumerable<RequestObject>>(requestObjects);
 
         }
 
         public async Task<bool> UpdateRequestAsync(RequestEntity request)
         {
-            if (request.Id == null)
+            if (request.Id == Guid.Empty)
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Request ID is not filled in."); 
             }
 
             var existingRequest = await _unitOfWork.Requests.GetById(request.Id);
 
             if (existingRequest == null)
-                throw new InvalidOperationException("There is no user for this ID");
+                throw new InvalidOperationException("Unable to retrieve request");
 
-            _mapper.Map(request, existingRequest);
+            //_mapper.Map(request, existingRequest);
 
             await _unitOfWork.Requests.Update(request);
             await _unitOfWork.CompleteAsync();
@@ -247,14 +266,14 @@ namespace BrewingBuddies_BLL.Services
 
         public async Task<bool> DeleteRuest(Guid userId)
         {
-            if (userId == null)
+            if (userId == Guid.Empty)
             {
-                throw new ArgumentException("Request ID is not filled in."); 
+                throw new ArgumentNullException("Request ID is not filled in."); 
             }
-            var user = await _unitOfWork.Requests.GetById(userId);
+            var request = await _unitOfWork.Requests.GetById(userId);
 
-            if (user == null)
-                throw new InvalidOperationException("There is no user for this ID");
+            if (request == null)
+                throw new InvalidOperationException("Unable To retrieve Request");
 
             await _unitOfWork.Requests.DeleteRequest(userId);
             await _unitOfWork.CompleteAsync();

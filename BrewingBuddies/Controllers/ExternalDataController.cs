@@ -15,7 +15,8 @@ namespace BrewingBuddies.Controllers
     {
         private IRiotAPIService _riotAPIService;
         private IMapper _mapper;
-        private readonly string apiKey = "RGAPI-d9084c39-ea13-46a7-92fd-04fad338dca6";
+        //in appestting.jason
+        private readonly string apiKey = "RGAPI-46638c7d-d61b-45c4-a7aa-2b2c4edcb73f";
         public ValuesController(IRiotAPIService riotAPIService, IMapper mapper)
         {
             _riotAPIService = riotAPIService;

@@ -84,7 +84,7 @@ namespace UnitTests
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await requestService.DeleteRuest(userId));
-            Assert.Equal("There is no user for this ID", exception.Message);
+            Assert.Equal("Unable To retrieve Request", exception.Message);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await requestService.UpdateRequestAsync(updatedRequest));
 
             // Assert
-            Assert.Equal("There is no user for this ID", exception.Message);
+            Assert.Equal("Unable to retrieve request", exception.Message);
         }
 
         [Fact]
