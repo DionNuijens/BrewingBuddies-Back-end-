@@ -15,6 +15,7 @@ namespace BrewingBuddies_Entitys
         public string? puuid { get; set; }
         public long summonerLevel { get; set; }
         public string? summonerName { get; set; }
+        public string? tagLine { get; set; }
 
     }
 }

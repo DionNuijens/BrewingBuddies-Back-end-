@@ -7,6 +7,7 @@ using BrewingBuddies_BLL.Services;
 using BrewingBuddies_BLL.Interfaces;
 using BrewingBuddies_BLL.Interfaces.Repositories;
 using AutoMapper;
+using BrewingBuddies_Entitys.Dtos.Requests;
 
 namespace UnitTests
 {
@@ -14,95 +15,219 @@ namespace UnitTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<ILeagueUserRepository> _mockUserRepository;
 
         public UserTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
-            _mockUserRepository = new Mock<IUserRepository>();
+            _mockUserRepository = new Mock<ILeagueUserRepository>();
         }
-
-        //[Fact]
-        //public void Test()
-        //{
-        //    int a = 1;
-        //    int b = 2;
-        //    int c = a + b;
-
-        //    Assert.Equal((a + b), c);
-        //}
 
         [Fact]
         public async Task GetUserByIdAsync_WithValidUserId_ReturnsUserDTO()
         {
             // Arrange
             Guid validUserId = Guid.NewGuid();
-            UserDTO validUser = new UserDTO
+            LeagueUserEntity validUser = new LeagueUserEntity
             {
                 Id = validUserId,
                 UserName = "Test"
             };
-            UserDTO expectedUserDTO = new UserDTO
+            LeagueUserEntity expectedUserDTO = new LeagueUserEntity
             {
                 Id = validUserId,
                 UserName = "Test"
             };
 
             _mockUserRepository.Setup(repo => repo.GetById(validUserId)).ReturnsAsync(validUser);
-            _mockMapper.Setup(mapper => mapper.Map<UserDTO>(validUser)).Returns(expectedUserDTO);
+            _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(validUser)).Returns(expectedUserDTO);
 
-            // Here you were using uninitialized mocks, let's initialize them first.
-            _mockUnitOfWork.Setup(uow => uow.User).Returns(_mockUserRepository.Object);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
 
-            var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
 
             // Act
-            UserDTO actualUser = await userService.GetUserByIdAsync(validUserId);
+            LeagueUserEntity actualUser = await userService.GetUserByIdAsync(validUserId);
 
             // Assert
             Assert.Equal(expectedUserDTO.Id, actualUser.Id);
             Assert.Equal(expectedUserDTO.UserName, actualUser.UserName);
         }
+
+        [Fact]
+        public async Task AddUserAsync_AddsUserAndReturnsTrue()
+        {
+            // Arrange
+            LeagueUserEntity newUser = new LeagueUserEntity
+            {
+                Id = Guid.NewGuid(),
+                UserName = "NewUser"
+            };
+            CreateLeagueUserRequest user = new CreateLeagueUserRequest
+            {               
+                UserName = "NewUser"
+            };
+            _mockMapper.Setup(mapper => mapper.Map<LeagueUserEntity>(user)).Returns(newUser);
+            _mockUserRepository.Setup(repo => repo.Create(newUser)).ReturnsAsync(true);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            LeagueUserEntity createdUser = await userService.AddUserAsync(user);
+
+            // Assert
+            Assert.Equal(newUser.Id, createdUser.Id);
+            Assert.Equal(newUser.UserName, createdUser.UserName);
+        }
+
+        [Fact]
+        public async Task UpdateUserAsync_WithValidUser_ReturnsTrue()
+        {
+            // Arrange
+            LeagueUserEntity existingUser = new LeagueUserEntity
+            {
+                Id = Guid.NewGuid(),
+                UserName = "ExistingUser"
+            };
+
+            LeagueUserEntity updatedUser = new LeagueUserEntity
+            {
+                Id = existingUser.Id,
+                UserName = "UpdatedUser"
+            };
+
+            
+            _mockUserRepository.Setup(repo => repo.GetById(existingUser.Id)).ReturnsAsync(existingUser);
+            _mockMapper.Setup(mapper => mapper.Map(updatedUser, existingUser)).Returns(existingUser);
+            _mockUserRepository.Setup(repo => repo.Update(existingUser)).ReturnsAsync(true);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            bool result = await userService.UpdateUserAsync(updatedUser);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task UpdateUserAsync_WithInvalidUser_ThrowsArgumentException()
+        {
+            // Arrange
+            LeagueUserEntity invalidUser = new LeagueUserEntity
+            {
+                Id = Guid.NewGuid(), 
+                UserName = ""  
+            };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockMapper = new Mock<IMapper>();
+
+            var userService = new LeagueUserService(mockUnitOfWork.Object, mockMapper.Object);
+
+            // Act and Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            {
+                await userService.UpdateUserAsync(invalidUser);
+            });
+        }
+
+        [Fact]
+        public async Task GetAllUsersFromAccount_ReturnsUsers()
+        {
+            // Arrange
+            string accountId = "accountId";
+            IEnumerable<LeagueUserEntity> users = new List<LeagueUserEntity>
+            {
+                new LeagueUserEntity { Id = Guid.NewGuid(), UserName = "User1" },
+                new LeagueUserEntity { Id = Guid.NewGuid(), UserName = "User2" }
+            };
+
+            _mockUserRepository.Setup(repo => repo.GetAllFromAccount(accountId)).ReturnsAsync(users);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<LeagueUserEntity>>(users)).Returns(users);
+
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            IEnumerable<LeagueUserEntity> result = await userService.GetAllUsersFromAccount(accountId);
+
+            // Assert
+            Assert.Equal(users, result);
+        }
+
+        [Fact]
+        public async Task DeleteUser_WithValidUserId_ReturnsTrue()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            LeagueUserEntity user = new LeagueUserEntity { Id = userId, UserName = "User" };
+
+            _mockUserRepository.Setup(repo => repo.GetById(userId)).ReturnsAsync(user);
+            _mockUserRepository.Setup(repo => repo.Delete(userId)).ReturnsAsync(true);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            bool result = await userService.DeleteUser(userId);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteUser_WithInvalidUserId_ReturnsFalse()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            _mockUserRepository.Setup(repo => repo.GetById(userId)).ReturnsAsync((LeagueUserEntity)null);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act and Assert
+            InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(async () => await userService.DeleteUser(userId));
+
+            // Assert
+            Assert.NotNull(ex);
+            Assert.Equal("Unable to find user from account.", ex.Message);
+        }
+
+        [Fact]
+        public async Task GetAllFromAccountConnected_ReturnsConnectedUsers()
+        {
+            // Arrange
+            string accountId = "accountId";
+            IEnumerable<LeagueUserEntity> users = new List<LeagueUserEntity>
+            {
+                new LeagueUserEntity { Id = Guid.NewGuid(), UserName = "User1", RiotId = "Riot1" },
+                new LeagueUserEntity { Id = Guid.NewGuid(), UserName = "User2", RiotId = null },
+                new LeagueUserEntity { Id = Guid.NewGuid(), UserName = "User3", RiotId = "Riot3" }
+            };
+
+            _mockUserRepository.Setup(repo => repo.GetAllFromAccount(accountId)).ReturnsAsync(users);
+            _mockUnitOfWork.Setup(uow => uow.LeagueUsers).Returns(_mockUserRepository.Object);
+
+
+            var userService = new LeagueUserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            IEnumerable<LeagueUserEntity> result = await userService.GetAllFromAccountConnected(accountId);
+
+            Assert.NotNull(result);
+
+            // Assert
+            Assert.Equal(2, result.Count());
+            Assert.All(result, user => Assert.NotNull(user.RiotId));
+        }
+
     }
-
-    //[Fact]
-    //public async Task AddUser_WhenCalled_ReturnsUsers()
-    //{
-    //    // Arrange
-    //    Guid user1Id = Guid.NewGuid();
-    //    Guid user2Id = Guid.NewGuid();
-    //    Guid user3Id = Guid.NewGuid();
-    //    var users = new List<UserDTO>
-    //    {
-    //        new UserDTO { Id = user1Id, UserName = "User1" ,Status = 1, AddedDate = DateTime.Now.AddDays(-3) },
-    //    };
-    //    var data = users.AsQueryable();
-    //    var mockdbContext = new Mock<AppDbContext>();
-    //    var mockSet = new Mock<DbSet<UserDTO>>();
-    //    //var mockLogger = new Mock<ILogger>();
-    //    var mockLogger = _logger;
-    //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Provider).Returns(data.Provider);
-    //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.ElementType).Returns(data.ElementType);
-    //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.Expression).Returns(data.Expression);
-    //    mockSet.As<IQueryable<UserDTO>>().Setup(x => x.GetEnumerator()).Returns(() => data.GetEnumerator());
-    //    mockdbContext.Setup(x => x.Users).Returns(mockSet.Object);
-
-    //    mockdbContext.Setup(x => x.SaveChanges()).Returns(1);
-
-    //    IUserRepository repository = new UserRepository(mockdbContext.Object, mockLogger);
-
-    //    // Act
-    //    //var response = await repository.Create(users.FirstOrDefault());
-    //    var result = await repository.Create(users.FirstOrDefault());
-
-    //    // Assert
-    //    Assert.NotNull(result);
-    //    Assert.Equal(1, 1);
-    //}
-
-
-
 
 }
 

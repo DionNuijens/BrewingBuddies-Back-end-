@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace BrewingBuddies_BLL.Interfaces.Repositories
 {
-    public class IUserContext : DbContext
-    {
+    //public class IUserContext : DbContext
+    //{
 
-        public IUserContext()
-        {
+    //    public IUserContext()
+    //    {
 
-        }
+    //    }
 
-        public IUserContext(DbContextOptions<IUserContext> options) : base(options) 
-        {
+    //    public IUserContext(DbContextOptions<IUserContext> options) : base(options) 
+    //    {
 
-        }
+    //    }
 
-        public virtual DbSet<UserDTO> Users { get; set; }
-    }
+    //    public virtual DbSet<LeagueUserEntity> Users { get; set; }
+    //}
 }

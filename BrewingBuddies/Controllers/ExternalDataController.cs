@@ -1,37 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BrewingBuddies_RiotClient;
+using AutoMapper;
+using BrewingBuddies_BLL.Interfaces.Services;
+//using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BrewingBuddies.Controllers
 {
     //Move to the BLL layer
-
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        string apiKey = "RGAPI-d8365b04-57a9-41c0-ae96-8fd17fbf7f67";
-
-        [HttpGet("Account")]
-        public async Task<IActionResult> GetPlayerData(string gameName, string tagLine)
+        private IRiotAPIService _riotAPIService;
+        private IMapper _mapper;
+        //in appestting.jason
+        private readonly string apiKey = "RGAPI-46638c7d-d61b-45c4-a7aa-2b2c4edcb73f";
+        public ValuesController(IRiotAPIService riotAPIService, IMapper mapper)
         {
-            try
-            {
-                var playerData = await API_Request.GetAccountInfo(gameName, tagLine, apiKey);
+            _riotAPIService = riotAPIService;
+            _mapper = mapper;
+        }
 
-                return Ok(playerData);
-            }
-            catch (Exception ex)
+
+
+        [HttpPut("UpdateRequest/")]
+        public async Task<IActionResult> UpdateOngoingChallenge(Guid id )
+        {
+            if (string.IsNullOrWhiteSpace(apiKey))
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return BadRequest("API key is required");
+            }
+
+            var result = await _riotAPIService.UpdateOngoingChallenge(id, apiKey);
+
+            if (result)
+            {
+                return Ok("Challenge updated successfully");
+            }
+            else
+            {
+                return BadRequest("Failed to update challenge");
             }
         }
 
-        [HttpGet("Summoner")]
+
+        [HttpGet("GetSummoner")]
         public async Task<IActionResult> GetSummoner(string gameName, string tagLine)
         {
             try
             {
-                var playerData = await API_Request.GetSummoner(gameName, tagLine, apiKey);
+                
+                var playerData = await _riotAPIService.GetSummonerAsync(gameName, tagLine, apiKey);
 
                 return Ok(playerData);
             }

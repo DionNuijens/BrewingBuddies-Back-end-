@@ -14,14 +14,21 @@ namespace BrewingBuddies_DataService.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context;
-        public IUserRepository User { get; }
+        public ILeagueUserRepository LeagueUsers { get; }
+        public IRegistrationRepository Registration { get; }
+        public IRiotRepository RiotUsers { get; }
+        public IRequestRepository Requests { get; }
+        
 
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
             var logger = loggerFactory.CreateLogger("logs");
 
-            User = new UserRepository(context, logger);
+            LeagueUsers = new LeagueUserRepository(context, logger);
+            Registration = new RegistrationRepository(context, logger);
+            RiotUsers = new RiotRepository(context, logger);
+            Requests = new RequestRepository(context, logger);
         }
 
         public async Task<bool> CompleteAsync()
